@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Room - GEN Z BATTLE</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="badge">
+            👑 CREATE GAME
+        </div>
+
+        <h1>
+            BUAT<br>
+            <span>ROOM</span>
+        </h1>
+
+        <p class="subtitle">
+            Siapkan permainanmu sebelum<br>
+            para peserta bergabung.
+        </p>
+
+
+        <div class="room-form">
+
+            <label>
+                NAMA HOST
+            </label>
+
+            <input
+                type="text"
+                id="hostName"
+                placeholder="Masukkan nama kamu"
+                maxlength="20"
+            >
+
+
+            <label>
+                JUMLAH PEMAIN
+            </label>
+
+            <div class="player-counter">
+
+                <button
+                    type="button"
+                    onclick="changePlayers(-1)"
+                >
+                    −
+                </button>
+
+                <strong id="playerCount">
+                    6
+                </strong>
+
+                <button
+                    type="button"
+                    onclick="changePlayers(1)"
+                >
+                    +
+                </button>
+
+            </div>
+
+
+            <label>
+                KATEGORI
+            </label>
+
+            <select id="category">
+
+                <option value="random">
+                    🎲 Random
+                </option>
+
+                <option value="general">
+                    📚 Pengetahuan Umum
+                </option>
+
+                <option value="genz">
+                    🔥 Gen Z
+                </option>
+
+                <option value="random-question">
+                    🤪 Pertanyaan Random
+                </option>
+
+            </select>
+
+
+            <button
+                class="create-button"
+                onclick="generateRoom()"
+            >
+                🎮 BUAT ROOM
+            </button>
+
+        </div>
+
+
+        <p class="version">
+            GEN Z BATTLE • V0.1
+        </p>
+
+    </main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

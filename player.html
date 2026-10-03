@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Join - GEN Z BATTLE</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="badge">
+            🎮 PLAYER MODE
+        </div>
+
+        <h1>
+            JOIN<br>
+            <span>GAME</span>
+        </h1>
+
+        <p class="subtitle">
+            Masukkan nama dan kode room untuk bergabung.
+        </p>
+
+        <div class="menu">
+
+            <!-- NAMA PLAYER -->
+            <input
+                id="playerName"
+                type="text"
+                placeholder="NAMA PLAYER"
+                maxlength="20"
+                autocomplete="off"
+                style="
+                    width:100%;
+                    padding:18px;
+                    margin-bottom:12px;
+                    box-sizing:border-box;
+                    border-radius:15px;
+                    border:1px solid rgba(255,255,255,0.15);
+                    background:rgba(255,255,255,0.06);
+                    color:white;
+                    text-align:center;
+                    font-size:18px;
+                    outline:none;
+                "
+            >
+
+            <!-- KODE ROOM -->
+            <input
+                id="roomCodeInput"
+                type="text"
+                placeholder="KODE ROOM"
+                maxlength="6"
+                autocomplete="off"
+                style="
+                    width:100%;
+                    padding:18px;
+                    box-sizing:border-box;
+                    border-radius:15px;
+                    border:1px solid rgba(255,255,255,0.15);
+                    background:rgba(255,255,255,0.06);
+                    color:white;
+                    text-align:center;
+                    font-size:18px;
+                    outline:none;
+                    text-transform:uppercase;
+                "
+            >
+
+            <button
+                class="main-button player"
+                onclick="joinRoom()"
+                style="margin-top:12px;"
+            >
+
+                <span class="icon">
+                    🚀
+                </span>
+
+                <div>
+                    <strong>
+                        GABUNG
+                    </strong>
+
+                    <small>
+                        Masuk ke permainan
+                    </small>
+                </div>
+
+                <span class="arrow">
+                    ›
+                </span>
+
+            </button>
+
+        </div>
+
+        <p class="version">
+            GEN Z BATTLE • V0.2
+        </p>
+
+    </main>
+
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase-config.js"></script>
+
+    <script src="script.js"></script>
+
+
+    <script>
+
+        // ========================================
+        // JOIN ROOM
+        // ========================================
+
+        async function joinRoom() {
+
+            const playerNameInput =
+                document.getElementById("playerName");
+
+            const roomCodeInput =
+                document.getElementById("roomCodeInput");
+
+
+            if (!playerNameInput || !roomCodeInput) {
+                return;
+            }
+
+
+            const playerName =
+                playerNameInput.value.trim();
+
+            const roomCode =
+                roomCodeInput.value
+                    .trim()
+                    .toUpperCase();
+
+
+            // Validasi nama
+            if (playerName === "") {
+
+                alert(
+                    "👤 Silakan masukkan nama player terlebih dahulu."
+                );
+
+                playerNameInput.focus();
+
+                return;
+            }
+
+
+            // Validasi kode
+            if (roomCode === "") {
+
+                alert(
+                    "🔑 Silakan masukkan kode room."
+                );
+
+                roomCodeInput.focus();
+
+                return;
+            }
+
+
+            try {
+
+                // Cari room berdasarkan kode
+                const { data: room, error: roomError } =
+                    await sb
+                        .from("rooms")
+                        .select("*")
+                        .eq("code", roomCode)
+                        .maybeSingle();
+
+
+                // Error database
+                if (roomError) {
+
+                    console.error(roomError);
+
+                    alert(
+                        "❌ Gagal mencari room.\n\n" +
+                        roomError.message
+                    );
+
+                    return;
+                }
+
+
+                // Room tidak ditemukan
+                if (!room) {
+
+                    alert(
+                        "❌ Kode room tidak ditemukan.\n\n" +
+                        "Periksa kembali kode room."
+                    );
+
+                    return;
+                }
+
+
+                // Cek status room
+                if (room.status !== "waiting") {
+
+                    alert(
+                        "⚠️ Game sudah dimulai atau sudah selesai."
+                    );
+
+                    return;
+                }
+
+
+                // Cek jumlah player
+                const { count, error: countError } =
+                    await sb
+                        .from("players")
+                        .select("*", {
+                            count: "exact",
+                            head: true
+                        })
+                        .eq("room_id", room.id);
+
+
+                if (countError) {
+
+                    console.error(countError);
+
+                    alert(
+                        "❌ Gagal mengecek jumlah player.\n\n" +
+                        countError.message
+                    );
+
+                    return;
+                }
+
+
+                if (count >= room.max_players) {
+
+                    alert(
+                        "🚫 Room sudah penuh."
+                    );
+
+                    return;
+                }
+
+
+                // Tambahkan player
+                const { data: player, error: playerError } =
+                    await sb
+                        .from("players")
+                        .insert([
+                            {
+                                room_id: room.id,
+                                name: playerName,
+                                score: 0
+                            }
+                        ])
+                        .select()
+                        .single();
+
+
+                if (playerError) {
+
+                    console.error(playerError);
+
+                    alert(
+                        "❌ Gagal bergabung ke room.\n\n" +
+                        playerError.message
+                    );
+
+                    return;
+                }
+
+
+                // Simpan data player di HP
+                localStorage.setItem(
+                    "genz_player_id",
+                    player.id
+                );
+
+                localStorage.setItem(
+                    "genz_player_name",
+                    player.name
+                );
+
+                localStorage.setItem(
+                    "genz_room",
+                    room.code
+                );
+
+                localStorage.setItem(
+                    "genz_room_id",
+                    room.id
+                );
+
+
+                // Berhasil
+                alert(
+                    "✅ Berhasil bergabung!\n\n" +
+                    "Room: " +
+                    room.code +
+                    "\nPlayer: " +
+                    player.name
+                );
+
+
+                // Untuk sementara masuk ke room.html
+                window.location.href =
+                    "room.html";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "❌ Terjadi kesalahan.\n\n" +
+                    error.message
+                );
+            }
+        }
+
+
+        // ========================================
+        // ENTER = JOIN
+        // ========================================
+
+        document
+            .getElementById("roomCodeInput")
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (event.key === "Enter") {
+                        joinRoom();
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

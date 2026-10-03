@@ -1,0 +1,398 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #050816;
+  color: white;
+  overflow: hidden;
+}
+
+.background-glow {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: #6c3cff;
+  opacity: 0.15;
+  filter: blur(120px);
+  border-radius: 50%;
+  top: -180px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  
+  min-height: 100vh;
+  max-width: 500px;
+  
+  margin: auto;
+  padding: 70px 25px 30px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.badge {
+  padding: 8px 16px;
+  
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  
+  background: rgba(255, 255, 255, 0.05);
+  
+  font-size: 12px;
+  letter-spacing: 2px;
+  
+  color: #b8b9ff;
+}
+
+h1 {
+  margin-top: 30px;
+  
+  font-size: clamp(55px, 16vw, 85px);
+  line-height: 0.85;
+  
+  font-weight: 900;
+  letter-spacing: -4px;
+}
+
+h1 span {
+  color: #8b5cf6;
+}
+
+.subtitle {
+  margin-top: 25px;
+  
+  color: #9ca3af;
+  
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.menu {
+  width: 100%;
+  margin-top: 45px;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.main-button {
+  width: 100%;
+  
+  display: flex;
+  align-items: center;
+  
+  padding: 18px;
+  
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  
+  background: rgba(255, 255, 255, 0.06);
+  
+  color: white;
+  
+  text-align: left;
+  
+  cursor: pointer;
+  
+  transition: 0.2s;
+}
+
+.main-button:active {
+  transform: scale(0.97);
+}
+
+.main-button .icon {
+  width: 52px;
+  height: 52px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  border-radius: 14px;
+  
+  background: rgba(255, 255, 255, 0.08);
+  
+  font-size: 25px;
+  
+  margin-right: 15px;
+}
+
+.main-button div {
+  flex: 1;
+}
+
+.main-button strong {
+  display: block;
+  
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+
+.main-button small {
+  display: block;
+  
+  margin-top: 5px;
+  
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.arrow {
+  font-size: 30px;
+  color: #777;
+}
+
+.host {
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+.player {
+  border-color: rgba(34, 211, 238, 0.25);
+}
+
+.info {
+  display: flex;
+  gap: 12px;
+  
+  margin-top: 35px;
+  
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.info span {
+  padding: 7px 10px;
+  
+  border-radius: 20px;
+  
+  background: rgba(255, 255, 255, 0.05);
+  
+  color: #9ca3af;
+  
+  font-size: 11px;
+}
+
+.version {
+  margin-top: auto;
+  padding-top: 35px;
+  
+  color: #4b5563;
+  
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.room-form {
+  width: 100%;
+  margin-top: 35px;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  
+  text-align: left;
+}
+
+.room-form label {
+  margin-top: 8px;
+  
+  color: #9ca3af;
+  
+  font-size: 11px;
+  font-weight: bold;
+  
+  letter-spacing: 1.5px;
+}
+
+.room-form input,
+.room-form select {
+  width: 100%;
+  
+  padding: 17px;
+  
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  
+  background: rgba(255, 255, 255, 0.06);
+  
+  color: white;
+  
+  font-size: 16px;
+  
+  outline: none;
+}
+
+.room-form input::placeholder {
+  color: #6b7280;
+}
+
+.room-form select option {
+  background: #111827;
+  color: white;
+}
+
+.player-counter {
+  width: 100%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  padding: 8px;
+  
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.player-counter button {
+  width: 48px;
+  height: 48px;
+  
+  border: none;
+  border-radius: 12px;
+  
+  background: rgba(139, 92, 246, 0.2);
+  
+  color: white;
+  
+  font-size: 28px;
+  
+  cursor: pointer;
+}
+
+.player-counter strong {
+  font-size: 24px;
+}
+
+.create-button {
+  width: 100%;
+  
+  margin-top: 20px;
+  
+  padding: 18px;
+  
+  border: none;
+  border-radius: 15px;
+  
+  background: #8b5cf6;
+  
+  color: white;
+  
+  font-size: 16px;
+  font-weight: bold;
+  
+  letter-spacing: 1px;
+  
+  cursor: pointer;
+}
+
+.create-button:active {
+  transform: scale(0.97);
+}
+
+.room-code-box {
+  width: 100%;
+  
+  margin-top: 30px;
+  
+  padding: 25px;
+  
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: 20px;
+  
+  background: rgba(139, 92, 246, 0.08);
+  
+  text-align: center;
+}
+
+.room-code-box small {
+  display: block;
+  
+  color: #9ca3af;
+  
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.room-code-box strong {
+  display: block;
+  
+  margin-top: 10px;
+  
+  color: #a78bfa;
+  
+  font-size: 38px;
+  letter-spacing: 8px;
+}
+
+.room-info {
+  width: 100%;
+  
+  margin-top: 20px;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.room-info div {
+  display: flex;
+  justify-content: space-between;
+  
+  padding: 14px;
+  
+  border-radius: 12px;
+  
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.room-info span {
+  color: #9ca3af;
+}
+
+.room-info strong {
+  color: white;
+}
+
+.waiting {
+  margin-top: 30px;
+  
+  text-align: center;
+}
+
+.loading-dot {
+  font-size: 25px;
+  
+  color: #8b5cf6;
+}
+
+.waiting h2 {
+  margin-top: 10px;
+  
+  font-size: 20px;
+}
+
+.waiting p {
+  margin-top: 8px;
+  
+  color: #9ca3af;
+  
+  font-size: 13px;
+  
+  line-height: 1.5;
+}
