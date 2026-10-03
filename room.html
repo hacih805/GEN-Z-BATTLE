@@ -31,6 +31,8 @@
         </p>
 
 
+        <!-- KODE ROOM -->
+
         <div class="room-code-box">
 
             <small>
@@ -43,6 +45,8 @@
 
         </div>
 
+
+        <!-- INFORMASI ROOM -->
 
         <div class="room-info">
 
@@ -78,6 +82,46 @@
         </div>
 
 
+        <!-- DAFTAR PEMAIN -->
+
+        <div
+            class="waiting"
+            style="margin-top:20px;"
+        >
+
+            <h2>
+                👥 Pemain
+                <span id="playerCountDisplay">
+                    (0/6)
+                </span>
+            </h2>
+
+
+            <div
+                id="playersList"
+                style="
+                    margin-top:15px;
+                    text-align:left;
+                "
+            >
+
+                <p
+                    id="noPlayers"
+                    style="
+                        text-align:center;
+                        opacity:0.7;
+                    "
+                >
+                    ⏳ Menunggu pemain...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
         <div class="waiting">
 
             <div class="loading-dot">
@@ -96,6 +140,8 @@
         </div>
 
 
+        <!-- MULAI GAME -->
+
         <button
             class="create-button"
             onclick="startGame()"
@@ -105,13 +151,345 @@
 
 
         <p class="version">
-            GEN Z BATTLE • V0.1
+            GEN Z BATTLE • V0.2
         </p>
 
     </main>
 
 
+    <!-- SUPABASE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase-config.js"></script>
+
     <script src="script.js"></script>
+
+
+    <!-- REALTIME PLAYER -->
+
+    <script>
+
+        let roomId = null;
+        let roomMaxPlayers = 6;
+
+
+        // ========================================
+        // LOAD ROOM
+        // ========================================
+
+        async function setupRoom() {
+
+            const roomCode =
+                localStorage.getItem("genz_room");
+
+
+            const hostName =
+                localStorage.getItem("genz_host");
+
+
+            roomId =
+                localStorage.getItem("genz_room_id");
+
+
+            const maxPlayers =
+                localStorage.getItem("genz_players");
+
+
+            const category =
+                localStorage.getItem("genz_category");
+
+
+            // Tampilkan data room
+
+            document.getElementById(
+                "roomCode"
+            ).textContent =
+                roomCode || "------";
+
+
+            document.getElementById(
+                "hostDisplay"
+            ).textContent =
+                hostName || "-";
+
+
+            roomMaxPlayers =
+                Number(maxPlayers) || 6;
+
+
+            document.getElementById(
+                "maxPlayers"
+            ).textContent =
+                roomMaxPlayers;
+
+
+            const categoryNames = {
+
+                "random":
+                    "🎲 Random",
+
+                "general":
+                    "📚 Pengetahuan Umum",
+
+                "genz":
+                    "🔥 Gen Z",
+
+                "random-question":
+                    "🤪 Pertanyaan Random"
+
+            };
+
+
+            document.getElementById(
+                "categoryDisplay"
+            ).textContent =
+                categoryNames[category] ||
+                "🎲 Random";
+
+
+            // Pastikan room ID tersedia
+
+            if (!roomId) {
+
+                console.error(
+                    "Room ID tidak ditemukan."
+                );
+
+                return;
+            }
+
+
+            // Ambil player pertama kali
+
+            await loadPlayers();
+
+
+            // Aktifkan realtime
+
+            listenForPlayers();
+
+        }
+
+
+        // ========================================
+        // LOAD PLAYERS
+        // ========================================
+
+        async function loadPlayers() {
+
+            if (!roomId) {
+                return;
+            }
+
+
+            const {
+                data: players,
+                error
+            } = await sb
+                .from("players")
+                .select("*")
+                .eq("room_id", roomId)
+                .order("joined_at", {
+                    ascending: true
+                });
+
+
+            if (error) {
+
+                console.error(
+                    "Gagal mengambil player:",
+                    error
+                );
+
+                return;
+            }
+
+
+            renderPlayers(players || []);
+
+        }
+
+
+        // ========================================
+        // TAMPILKAN PLAYER
+        // ========================================
+
+        function renderPlayers(players) {
+
+            const list =
+                document.getElementById(
+                    "playersList"
+                );
+
+
+            const noPlayers =
+                document.getElementById(
+                    "noPlayers"
+                );
+
+
+            const countDisplay =
+                document.getElementById(
+                    "playerCountDisplay"
+                );
+
+
+            countDisplay.textContent =
+                `(${players.length}/${roomMaxPlayers})`;
+
+
+            if (players.length === 0) {
+
+                list.innerHTML = `
+                    <p
+                        id="noPlayers"
+                        style="
+                            text-align:center;
+                            opacity:0.7;
+                        "
+                    >
+                        ⏳ Menunggu pemain...
+                    </p>
+                `;
+
+                return;
+            }
+
+
+            list.innerHTML = "";
+
+
+            players.forEach(
+                function(player, index) {
+
+                    const playerItem =
+                        document.createElement("div");
+
+
+                    playerItem.style.cssText = `
+                        display:flex;
+                        align-items:center;
+                        gap:12px;
+                        padding:12px;
+                        margin-bottom:8px;
+                        border-radius:12px;
+                        background:rgba(255,255,255,0.06);
+                        border:1px solid rgba(255,255,255,0.08);
+                    `;
+
+
+                    playerItem.innerHTML = `
+
+                        <span
+                            style="
+                                font-size:22px;
+                            "
+                        >
+                            🟢
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(player.name)}
+                            </strong>
+
+                            <small
+                                style="
+                                    display:block;
+                                    opacity:0.6;
+                                "
+                            >
+                                Player ${index + 1}
+                            </small>
+
+                        </div>
+
+                    `;
+
+
+                    list.appendChild(
+                        playerItem
+                    );
+
+                }
+            );
+
+        }
+
+
+        // ========================================
+        // REALTIME
+        // ========================================
+
+        function listenForPlayers() {
+
+            sb
+                .channel(
+                    "room-players-" + roomId
+                )
+
+                .on(
+                    "postgres_changes",
+                    {
+                        event: "*",
+                        schema: "public",
+                        table: "players",
+                        filter:
+                            "room_id=eq." + roomId
+                    },
+                    function(payload) {
+
+                        console.log(
+                            "Player berubah:",
+                            payload
+                        );
+
+
+                        loadPlayers();
+
+                    }
+                )
+
+                .subscribe(
+                    function(status) {
+
+                        console.log(
+                            "Realtime status:",
+                            status
+                        );
+
+                    }
+                );
+
+        }
+
+
+        // ========================================
+        // KEAMANAN TEKS
+        // ========================================
+
+        function escapeHTML(text) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                text || "";
+
+            return div.innerHTML;
+
+        }
+
+
+        // ========================================
+        // MULAI
+        // ========================================
+
+        setupRoom();
+
+    </script>
 
 </body>
 
