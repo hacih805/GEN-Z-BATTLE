@@ -14,11 +14,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
     <main class="container">
 
-        <!-- HEADER -->
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
 
         <div class="badge">
             🔥 GEN Z BATTLE
@@ -30,7 +33,9 @@
         </h1>
 
 
-        <!-- PLAYER & ROOM -->
+        <!-- =====================================================
+             PLAYER & ROOM
+        ====================================================== -->
 
         <div class="room-info">
 
@@ -47,7 +52,9 @@
         </div>
 
 
-        <!-- ROUND -->
+        <!-- =====================================================
+             RONDE
+        ====================================================== -->
 
         <div
             class="waiting"
@@ -65,7 +72,9 @@
         </div>
 
 
-        <!-- QUESTION -->
+        <!-- =====================================================
+             PERTANYAAN
+        ====================================================== -->
 
         <div
             class="waiting"
@@ -83,7 +92,9 @@
         </div>
 
 
-        <!-- BELL -->
+        <!-- =====================================================
+             BELL BATTLE
+        ====================================================== -->
 
         <div
             style="
@@ -143,9 +154,9 @@
         </div>
 
 
-        <!-- =================================
+        <!-- =====================================================
              AREA JAWABAN
-        ================================== -->
+        ====================================================== -->
 
         <div
             id="answerArea"
@@ -160,6 +171,7 @@
                 ✍️ Jawaban Kamu
             </h2>
 
+
             <p
                 id="answerInfo"
                 style="
@@ -173,8 +185,8 @@
 
             <textarea
                 id="answerInput"
-                placeholder="Tulis jawaban kamu di sini..."
                 rows="4"
+                placeholder="Tulis jawaban kamu di sini..."
                 style="
                     width:100%;
                     box-sizing:border-box;
@@ -220,7 +232,9 @@
         </div>
 
 
-        <!-- SCORE -->
+        <!-- =====================================================
+             SKOR
+        ====================================================== -->
 
         <div
             class="waiting"
@@ -239,6 +253,10 @@
         </div>
 
 
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
         <p class="version">
             GEN Z BATTLE • REALTIME
         </p>
@@ -246,7 +264,9 @@
     </main>
 
 
-    <!-- SUPABASE -->
+    <!-- =========================================================
+         SUPABASE
+    ========================================================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -260,84 +280,57 @@
         // =====================================================
 
         const playerName =
-            localStorage.getItem(
-                "genz_player_name"
-            );
+            localStorage.getItem("genz_player_name");
 
         const playerId =
-            localStorage.getItem(
-                "genz_player_id"
-            );
+            localStorage.getItem("genz_player_id");
 
         const roomCode =
-            localStorage.getItem(
-                "genz_room"
-            );
+            localStorage.getItem("genz_room");
 
         const roomId =
-            localStorage.getItem(
-                "genz_room_id"
-            );
+            localStorage.getItem("genz_room_id");
 
 
         // =====================================================
-        // ELEMENT
+        // ELEMENT HTML
         // =====================================================
 
         const playerNameElement =
-            document.getElementById(
-                "playerName"
-            );
+            document.getElementById("playerName");
 
         const roomCodeElement =
-            document.getElementById(
-                "roomCode"
-            );
+            document.getElementById("roomCode");
 
         const roundDisplay =
-            document.getElementById(
-                "roundDisplay"
-            );
+            document.getElementById("roundDisplay");
 
         const questionText =
-            document.getElementById(
-                "questionText"
-            );
+            document.getElementById("questionText");
 
         const bellButton =
-            document.getElementById(
-                "bellButton"
-            );
+            document.getElementById("bellButton");
 
         const bellStatus =
-            document.getElementById(
-                "bellStatus"
-            );
+            document.getElementById("bellStatus");
 
         const winnerText =
-            document.getElementById(
-                "winnerText"
-            );
+            document.getElementById("winnerText");
 
         const answerArea =
-            document.getElementById(
-                "answerArea"
-            );
+            document.getElementById("answerArea");
 
         const answerInput =
-            document.getElementById(
-                "answerInput"
-            );
+            document.getElementById("answerInput");
+
+        const answerInfo =
+            document.getElementById("answerInfo");
 
         const submitAnswerButton =
-            document.getElementById(
-                "submitAnswerButton"
-            );
+            document.getElementById("submitAnswerButton");
 
         const answerStatus =
-            document.getElementById(
-                "answerStatus"
-            );
+            document.getElementById("answerStatus");
 
 
         // =====================================================
@@ -374,11 +367,9 @@
 
             bellButton.disabled = true;
 
-            bellButton.style.opacity =
-                "0.35";
+            bellButton.style.opacity = "0.35";
 
-            bellButton.style.cursor =
-                "not-allowed";
+            bellButton.style.cursor = "not-allowed";
 
         }
 
@@ -397,38 +388,33 @@
 
             bellButton.disabled = false;
 
-            bellButton.style.opacity =
-                "1";
+            bellButton.style.opacity = "1";
 
-            bellButton.style.cursor =
-                "pointer";
+            bellButton.style.cursor = "pointer";
 
         }
 
 
         // =====================================================
-        // RESET JAWABAN
+        // RESET AREA JAWABAN
         // =====================================================
 
         function resetAnswerArea() {
 
             currentWinnerId = null;
 
-            answerArea.style.display =
-                "none";
+            answerArea.style.display = "none";
 
             answerInput.value = "";
 
             answerInput.disabled = false;
 
-            submitAnswerButton.disabled =
-                false;
+            submitAnswerButton.disabled = false;
 
-            submitAnswerButton.style.opacity =
-                "1";
+            submitAnswerButton.textContent =
+                "📤 KIRIM JAWABAN";
 
-            answerStatus.textContent =
-                "";
+            answerStatus.textContent = "";
 
         }
 
@@ -439,34 +425,32 @@
 
         function showAnswerArea() {
 
-            if (
-                !playerId ||
-                !currentWinnerId
-            ) {
+            // Tidak ada player ID
+            if (!playerId) {
                 return;
             }
 
 
-            // Hanya pemenang Bell
-            if (
-                currentWinnerId !==
-                playerId
-            ) {
+            // Tidak ada pemenang
+            if (!currentWinnerId) {
+                return;
+            }
 
-                answerArea.style.display =
-                    "none";
+
+            // Bukan pemenang Bell
+            if (currentWinnerId !== playerId) {
+
+                answerArea.style.display = "none";
 
                 return;
             }
 
 
-            answerArea.style.display =
-                "block";
+            // Pemenang Bell
+            answerArea.style.display = "block";
 
             answerInfo.textContent =
                 "🏆 Kamu memenangkan Bell! Silakan jawab pertanyaan.";
-
-            answerInput.focus();
 
         }
 
@@ -478,10 +462,10 @@
         function renderQuestion() {
 
             roundDisplay.textContent =
-                "Ronde " +
-                currentRound;
+                "Ronde " + currentRound;
 
 
+            // Ada pertanyaan
             if (currentQuestion) {
 
                 questionText.textContent =
@@ -497,28 +481,29 @@
 
                 unlockBell();
 
-            } else {
-
-                questionText.textContent =
-                    "Menunggu pertanyaan...";
-
-                bellStatus.textContent =
-                    "⏳ Menunggu pertanyaan";
-
-                winnerText.textContent =
-                    "Host sedang menyiapkan pertanyaan.";
-
-                resetAnswerArea();
-
-                lockBell();
-
+                return;
             }
+
+
+            // Belum ada pertanyaan
+            questionText.textContent =
+                "Menunggu pertanyaan...";
+
+            bellStatus.textContent =
+                "⏳ Menunggu pertanyaan";
+
+            winnerText.textContent =
+                "Host sedang menyiapkan pertanyaan.";
+
+            resetAnswerArea();
+
+            lockBell();
 
         }
 
 
         // =====================================================
-        // LOAD ROOM
+        // LOAD DATA ROOM
         // =====================================================
 
         async function loadRoomGame() {
@@ -545,13 +530,11 @@
                 .select(
                     "current_question, round_number, status"
                 )
-                .eq(
-                    "id",
-                    roomId
-                )
+                .eq("id", roomId)
                 .maybeSingle();
 
 
+            // Error
             if (error) {
 
                 console.error(
@@ -568,6 +551,7 @@
             }
 
 
+            // Room tidak ditemukan
             if (!room) {
 
                 questionText.textContent =
@@ -580,18 +564,13 @@
 
 
             currentRound =
-                Number(
-                    room.round_number
-                ) || 1;
-
+                Number(room.round_number) || 1;
 
             currentQuestion =
-                room.current_question ||
-                "";
+                room.current_question || "";
 
 
             renderQuestion();
-
 
             await loadWinner();
 
@@ -644,19 +623,19 @@
                 } = await sb
                     .from("bell_battles")
                     .insert({
-                        room_id:
-                            roomId,
 
-                        round_number:
-                            currentRound,
+                        room_id: roomId,
 
-                        player_id:
-                            playerId
+                        round_number: currentRound,
+
+                        player_id: playerId
+
                     })
                     .select()
                     .single();
 
 
+                // Bell gagal
                 if (error) {
 
                     console.error(
@@ -665,10 +644,8 @@
                     );
 
 
-                    if (
-                        error.code ===
-                        "23505"
-                    ) {
+                    // Player lain sudah menang
+                    if (error.code === "23505") {
 
                         bellStatus.textContent =
                             "🔒 Bell sudah dimenangkan!";
@@ -690,6 +667,7 @@
                 }
 
 
+                // Bell berhasil
                 console.log(
                     "🏆 Bell berhasil:",
                     data
@@ -701,10 +679,8 @@
 
 
                 showWinner(
-                    playerName ||
-                    "Player"
+                    playerName || "Player"
                 );
-
 
                 showAnswerArea();
 
@@ -715,7 +691,6 @@
                     "❌ Error:",
                     error
                 );
-
 
                 bellStatus.textContent =
                     "❌ Terjadi kesalahan.";
@@ -730,7 +705,7 @@
 
 
         // =====================================================
-        // LOAD PEMENANG
+        // LOAD PEMENANG BELL
         // =====================================================
 
         async function loadWinner() {
@@ -748,17 +723,12 @@
                 .select(
                     "id, player_id, round_number, pressed_at"
                 )
-                .eq(
-                    "room_id",
-                    roomId
-                )
-                .eq(
-                    "round_number",
-                    currentRound
-                )
+                .eq("room_id", roomId)
+                .eq("round_number", currentRound)
                 .maybeSingle();
 
 
+            // Error
             if (error) {
 
                 console.error(
@@ -770,6 +740,7 @@
             }
 
 
+            // Belum ada pemenang
             if (!data) {
 
                 currentWinnerId = null;
@@ -789,6 +760,7 @@
             }
 
 
+            // Simpan ID pemenang
             currentWinnerId =
                 data.player_id;
 
@@ -796,7 +768,6 @@
             await showWinnerById(
                 data.player_id
             );
-
 
             showAnswerArea();
 
@@ -817,10 +788,7 @@
             } = await sb
                 .from("players")
                 .select("name")
-                .eq(
-                    "id",
-                    winnerPlayerId
-                )
+                .eq("id", winnerPlayerId)
                 .maybeSingle();
 
 
@@ -831,17 +799,14 @@
                     error
                 );
 
-                showWinner(
-                    "Player"
-                );
+                showWinner("Player");
 
                 return;
             }
 
 
             showWinner(
-                data?.name ||
-                "Player"
+                data?.name || "Player"
             );
 
         }
@@ -851,12 +816,9 @@
         // TAMPILKAN PEMENANG
         // =====================================================
 
-        function showWinner(
-            winnerName
-        ) {
+        function showWinner(winnerName) {
 
             lockBell();
-
 
             bellStatus.textContent =
                 "🔒 BELL TERKUNCI";
@@ -883,7 +845,7 @@
 
 
         // =====================================================
-        // KIRIM JAWABAN
+        // KIRIM JAWABAN KE SUPABASE
         // =====================================================
 
         async function submitAnswer() {
@@ -893,10 +855,21 @@
             }
 
 
+            if (!roomId) {
+
+                answerStatus.textContent =
+                    "❌ Room tidak ditemukan.";
+
+                return;
+            }
+
+
+            // Ambil jawaban
             const answer =
                 answerInput.value.trim();
 
 
+            // Jawaban kosong
             if (!answer) {
 
                 answerStatus.textContent =
@@ -908,50 +881,116 @@
             }
 
 
-            submitAnswerButton.disabled =
-                true;
+            // Pastikan player adalah pemenang
+            if (
+                currentWinnerId !==
+                playerId
+            ) {
 
-            answerInput.disabled =
-                true;
+                answerStatus.textContent =
+                    "❌ Hanya pemenang Bell yang dapat menjawab.";
+
+                return;
+            }
+
+
+            // Kunci input
+            submitAnswerButton.disabled = true;
+
+            answerInput.disabled = true;
 
             answerStatus.textContent =
                 "⏳ Mengirim jawaban...";
 
 
-            // Untuk tahap pertama,
-            // jawaban disimpan sementara
-            // di localStorage.
+            try {
 
-            const answerData = {
+                const {
+                    data,
+                    error
+                } = await sb
+                    .from("answers")
+                    .insert({
 
-                room_id:
-                    roomId,
+                        room_id:
+                            roomId,
 
-                round_number:
-                    currentRound,
+                        round_number:
+                            currentRound,
 
-                player_id:
-                    playerId,
+                        player_id:
+                            playerId,
 
-                answer:
-                    answer,
+                        answer:
+                            answer
 
-                submitted_at:
-                    new Date().toISOString()
-
-            };
-
-
-            localStorage.setItem(
-                "genz_current_answer",
-                JSON.stringify(
-                    answerData
-                )
-            );
+                    })
+                    .select()
+                    .single();
 
 
-            answerStatus.textContent =
-                "✅ Jawaban berhasil dikirim!";
+                // Error
+                if (error) {
+
+                    console.error(
+                        "❌ Gagal mengirim jawaban:",
+                        error
+                    );
+
+
+                    // Sudah menjawab
+                    if (error.code === "23505") {
+
+                        answerStatus.textContent =
+                            "⚠️ Kamu sudah mengirim jawaban untuk ronde ini.";
+
+                        return;
+                    }
+
+
+                    answerStatus.textContent =
+                        "❌ Gagal mengirim jawaban.";
+
+                    answerInput.disabled = false;
+
+                    submitAnswerButton.disabled =
+                        false;
+
+                    return;
+                }
+
+
+                // Berhasil
+                console.log(
+                    "✅ Jawaban berhasil:",
+                    data
+                );
+
+
+                answerStatus.textContent =
+                    "✅ Jawaban berhasil dikirim!";
+
+                submitAnswerButton.textContent =
+                    "✅ JAWABAN TERKIRIM";
+
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error submit jawaban:",
+                    error
+                );
+
+
+                answerStatus.textContent =
+                    "❌ Terjadi kesalahan.";
+
+                answerInput.disabled = false;
+
+                submitAnswerButton.disabled =
+                    false;
+
+            }
 
         }
 
@@ -992,19 +1031,16 @@
 
                         currentRound =
                             Number(
-                                payload.new
-                                    .round_number
+                                payload.new.round_number
                             ) || 1;
 
 
                         currentQuestion =
-                            payload.new
-                                .current_question ||
+                            payload.new.current_question ||
                             "";
 
 
                         renderQuestion();
-
 
                         await loadWinner();
 
@@ -1058,10 +1094,10 @@
                         );
 
 
+                        // Abaikan ronde berbeda
                         if (
                             Number(
-                                payload.new
-                                    .round_number
+                                payload.new.round_number
                             ) !==
                             currentRound
                         ) {
@@ -1071,13 +1107,11 @@
 
 
                         currentWinnerId =
-                            payload.new
-                                .player_id;
+                            payload.new.player_id;
 
 
                         await showWinnerById(
-                            payload.new
-                                .player_id
+                            payload.new.player_id
                         );
 
 
@@ -1100,7 +1134,7 @@
 
 
         // =====================================================
-        // MULAI GAME
+        // INISIALISASI GAME
         // =====================================================
 
         async function initializeGame() {
@@ -1118,6 +1152,7 @@
         }
 
 
+        // Jalankan game
         initializeGame();
 
     </script>
