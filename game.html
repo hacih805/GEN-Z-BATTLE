@@ -18,9 +18,7 @@
 
     <main class="container">
 
-        <!-- =================================
-             HEADER
-        ================================== -->
+        <!-- HEADER -->
 
         <div class="badge">
             🔥 GEN Z BATTLE
@@ -32,9 +30,7 @@
         </h1>
 
 
-        <!-- =================================
-             PLAYER & ROOM
-        ================================== -->
+        <!-- PLAYER & ROOM -->
 
         <div class="room-info">
 
@@ -51,9 +47,7 @@
         </div>
 
 
-        <!-- =================================
-             ROUND
-        ================================== -->
+        <!-- ROUND -->
 
         <div
             class="waiting"
@@ -71,9 +65,7 @@
         </div>
 
 
-        <!-- =================================
-             QUESTION
-        ================================== -->
+        <!-- QUESTION -->
 
         <div
             class="waiting"
@@ -85,15 +77,13 @@
             </small>
 
             <h2 id="questionText">
-                Bersiap...
+                Menunggu pertanyaan...
             </h2>
 
         </div>
 
 
-        <!-- =================================
-             BELL
-        ================================== -->
+        <!-- BELL -->
 
         <div
             style="
@@ -109,7 +99,7 @@
                     opacity:0.85;
                 "
             >
-                🔔 Bell siap!
+                ⏳ Menunggu pertanyaan
             </p>
 
 
@@ -154,8 +144,83 @@
 
 
         <!-- =================================
-             SCORE
+             AREA JAWABAN
         ================================== -->
+
+        <div
+            id="answerArea"
+            class="waiting"
+            style="
+                margin-top:30px;
+                display:none;
+            "
+        >
+
+            <h2>
+                ✍️ Jawaban Kamu
+            </h2>
+
+            <p
+                id="answerInfo"
+                style="
+                    opacity:0.8;
+                    margin-bottom:15px;
+                "
+            >
+                Kamu memenangkan Bell!
+            </p>
+
+
+            <textarea
+                id="answerInput"
+                placeholder="Tulis jawaban kamu di sini..."
+                rows="4"
+                style="
+                    width:100%;
+                    box-sizing:border-box;
+                    padding:15px;
+                    border-radius:12px;
+                    border:1px solid rgba(255,255,255,0.2);
+                    background:rgba(255,255,255,0.08);
+                    color:inherit;
+                    font-size:16px;
+                    resize:vertical;
+                    outline:none;
+                "
+            ></textarea>
+
+
+            <button
+                id="submitAnswerButton"
+                type="button"
+                onclick="submitAnswer()"
+                style="
+                    width:100%;
+                    margin-top:15px;
+                    padding:15px;
+                    border:none;
+                    border-radius:12px;
+                    font-size:16px;
+                    font-weight:bold;
+                    cursor:pointer;
+                "
+            >
+                📤 KIRIM JAWABAN
+            </button>
+
+
+            <p
+                id="answerStatus"
+                style="
+                    margin-top:15px;
+                    text-align:center;
+                "
+            ></p>
+
+        </div>
+
+
+        <!-- SCORE -->
 
         <div
             class="waiting"
@@ -168,7 +233,7 @@
 
             <p>
                 Sistem skor akan kita tambahkan
-                setelah Bell Battle stabil.
+                setelah sistem jawaban stabil.
             </p>
 
         </div>
@@ -181,9 +246,7 @@
     </main>
 
 
-    <!-- =================================
-         SUPABASE
-    ================================== -->
+    <!-- SUPABASE -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -256,13 +319,33 @@
                 "winnerText"
             );
 
+        const answerArea =
+            document.getElementById(
+                "answerArea"
+            );
+
+        const answerInput =
+            document.getElementById(
+                "answerInput"
+            );
+
+        const submitAnswerButton =
+            document.getElementById(
+                "submitAnswerButton"
+            );
+
+        const answerStatus =
+            document.getElementById(
+                "answerStatus"
+            );
+
 
         // =====================================================
         // TAMPILKAN DATA PLAYER
         // =====================================================
 
         playerNameElement.textContent =
-            playerName || "Host";
+            playerName || "Player";
 
         roomCodeElement.textContent =
             roomCode || "------";
@@ -277,6 +360,8 @@
         let currentQuestion = "";
 
         let bellLocked = true;
+
+        let currentWinnerId = null;
 
 
         // =====================================================
@@ -322,6 +407,71 @@
 
 
         // =====================================================
+        // RESET JAWABAN
+        // =====================================================
+
+        function resetAnswerArea() {
+
+            currentWinnerId = null;
+
+            answerArea.style.display =
+                "none";
+
+            answerInput.value = "";
+
+            answerInput.disabled = false;
+
+            submitAnswerButton.disabled =
+                false;
+
+            submitAnswerButton.style.opacity =
+                "1";
+
+            answerStatus.textContent =
+                "";
+
+        }
+
+
+        // =====================================================
+        // TAMPILKAN AREA JAWABAN
+        // =====================================================
+
+        function showAnswerArea() {
+
+            if (
+                !playerId ||
+                !currentWinnerId
+            ) {
+                return;
+            }
+
+
+            // Hanya pemenang Bell
+            if (
+                currentWinnerId !==
+                playerId
+            ) {
+
+                answerArea.style.display =
+                    "none";
+
+                return;
+            }
+
+
+            answerArea.style.display =
+                "block";
+
+            answerInfo.textContent =
+                "🏆 Kamu memenangkan Bell! Silakan jawab pertanyaan.";
+
+            answerInput.focus();
+
+        }
+
+
+        // =====================================================
         // TAMPILKAN PERTANYAAN
         // =====================================================
 
@@ -343,6 +493,8 @@
                 winnerText.textContent =
                     "Siapa paling cepat?";
 
+                resetAnswerArea();
+
                 unlockBell();
 
             } else {
@@ -355,6 +507,8 @@
 
                 winnerText.textContent =
                     "Host sedang menyiapkan pertanyaan.";
+
+                resetAnswerArea();
 
                 lockBell();
 
@@ -439,7 +593,6 @@
             renderQuestion();
 
 
-            // Cek bell ronde ini
             await loadWinner();
 
         }
@@ -504,10 +657,6 @@
                     .single();
 
 
-                // =============================================
-                // ERROR
-                // =============================================
-
                 if (error) {
 
                     console.error(
@@ -516,7 +665,6 @@
                     );
 
 
-                    // Player lain sudah menang
                     if (
                         error.code ===
                         "23505"
@@ -542,20 +690,23 @@
                 }
 
 
-                // =============================================
-                // BERHASIL
-                // =============================================
-
                 console.log(
                     "🏆 Bell berhasil:",
                     data
                 );
 
 
+                currentWinnerId =
+                    playerId;
+
+
                 showWinner(
                     playerName ||
                     "Player"
                 );
+
+
+                showAnswerArea();
 
 
             } catch (error) {
@@ -619,8 +770,9 @@
             }
 
 
-            // Belum ada pemenang
             if (!data) {
+
+                currentWinnerId = null;
 
                 winnerText.textContent =
                     "Siapa paling cepat?";
@@ -628,15 +780,25 @@
                 bellStatus.textContent =
                     "🔔 Bell siap!";
 
+                answerArea.style.display =
+                    "none";
+
                 unlockBell();
 
                 return;
             }
 
 
+            currentWinnerId =
+                data.player_id;
+
+
             await showWinnerById(
                 data.player_id
             );
+
+
+            showAnswerArea();
 
         }
 
@@ -721,6 +883,80 @@
 
 
         // =====================================================
+        // KIRIM JAWABAN
+        // =====================================================
+
+        async function submitAnswer() {
+
+            if (!playerId) {
+                return;
+            }
+
+
+            const answer =
+                answerInput.value.trim();
+
+
+            if (!answer) {
+
+                answerStatus.textContent =
+                    "⚠️ Jawaban belum diisi.";
+
+                answerInput.focus();
+
+                return;
+            }
+
+
+            submitAnswerButton.disabled =
+                true;
+
+            answerInput.disabled =
+                true;
+
+            answerStatus.textContent =
+                "⏳ Mengirim jawaban...";
+
+
+            // Untuk tahap pertama,
+            // jawaban disimpan sementara
+            // di localStorage.
+
+            const answerData = {
+
+                room_id:
+                    roomId,
+
+                round_number:
+                    currentRound,
+
+                player_id:
+                    playerId,
+
+                answer:
+                    answer,
+
+                submitted_at:
+                    new Date().toISOString()
+
+            };
+
+
+            localStorage.setItem(
+                "genz_current_answer",
+                JSON.stringify(
+                    answerData
+                )
+            );
+
+
+            answerStatus.textContent =
+                "✅ Jawaban berhasil dikirim!";
+
+        }
+
+
+        // =====================================================
         // REALTIME ROOM
         // =====================================================
 
@@ -770,8 +1006,6 @@
                         renderQuestion();
 
 
-                        // Setiap ronde baru,
-                        // cek bell dari ronde tersebut
                         await loadWinner();
 
                     }
@@ -836,10 +1070,18 @@
                         }
 
 
+                        currentWinnerId =
+                            payload.new
+                                .player_id;
+
+
                         await showWinnerById(
                             payload.new
                                 .player_id
                         );
+
+
+                        showAnswerArea();
 
                     }
                 )
@@ -864,6 +1106,8 @@
         async function initializeGame() {
 
             lockBell();
+
+            resetAnswerArea();
 
             await loadRoomGame();
 
