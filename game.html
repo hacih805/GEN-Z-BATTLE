@@ -18,7 +18,10 @@
 
     <main class="container">
 
-        <!-- HEADER -->
+        <!-- =========================
+             HEADER
+        ========================== -->
+
         <div class="badge">
             🔥 GEN Z BATTLE
         </div>
@@ -29,7 +32,10 @@
         </h1>
 
 
-        <!-- ROOM INFO -->
+        <!-- =========================
+             ROOM INFO
+        ========================== -->
+
         <div class="room-info">
 
             <div>
@@ -45,7 +51,10 @@
         </div>
 
 
-        <!-- QUESTION -->
+        <!-- =========================
+             QUESTION
+        ========================== -->
+
         <div
             class="waiting"
             style="margin-top:20px;"
@@ -62,7 +71,10 @@
         </div>
 
 
-        <!-- BELL AREA -->
+        <!-- =========================
+             BELL AREA
+        ========================== -->
+
         <div
             style="
                 margin-top:30px;
@@ -83,6 +95,7 @@
 
             <button
                 id="bellButton"
+                type="button"
                 onclick="pressBell()"
                 style="
                     width:190px;
@@ -120,7 +133,10 @@
         </div>
 
 
-        <!-- SCORE -->
+        <!-- =========================
+             SCORE
+        ========================== -->
+
         <div
             class="waiting"
             style="margin-top:30px;"
@@ -145,7 +161,10 @@
     </main>
 
 
-    <!-- SUPABASE -->
+    <!-- =========================
+         SUPABASE
+    ========================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script src="supabase-config.js"></script>
@@ -153,9 +172,9 @@
 
     <script>
 
-        // =========================================
+        // =====================================================
         // DATA ROOM & PLAYER
-        // =========================================
+        // =====================================================
 
         const playerName =
             localStorage.getItem(
@@ -178,25 +197,26 @@
             );
 
 
-        // =========================================
-        // TAMPILKAN DATA
-        // =========================================
+        // =====================================================
+        // ROUND
+        // =====================================================
 
-        document.getElementById(
-            "playerName"
-        ).textContent =
-            playerName || "Host";
+        const roundNumber = 1;
 
 
-        document.getElementById(
-            "roomCode"
-        ).textContent =
-            roomCode || "------";
-
-
-        // =========================================
+        // =====================================================
         // ELEMENT
-        // =========================================
+        // =====================================================
+
+        const playerNameElement =
+            document.getElementById(
+                "playerName"
+            );
+
+        const roomCodeElement =
+            document.getElementById(
+                "roomCode"
+            );
 
         const bellButton =
             document.getElementById(
@@ -214,47 +234,86 @@
             );
 
 
-        // =========================================
+        // =====================================================
+        // TAMPILKAN DATA
+        // =====================================================
+
+        playerNameElement.textContent =
+            playerName || "Host";
+
+        roomCodeElement.textContent =
+            roomCode || "------";
+
+
+        // =====================================================
         // BELL STATE
-        // =========================================
+        // =====================================================
 
         let bellLocked = false;
 
-        const roundNumber = 1;
 
+        // =====================================================
+        // FUNGSI KUNCI BELL
+        // =====================================================
 
-        // =========================================
-        // CEK DATA ROOM
-        // =========================================
-
-        if (!roomId) {
+        function lockBell() {
 
             bellLocked = true;
 
             bellButton.disabled = true;
 
-            bellButton.style.opacity = "0.4";
+            bellButton.style.opacity =
+                "0.35";
 
-            bellStatus.textContent =
-                "❌ Room tidak ditemukan.";
+            bellButton.style.cursor =
+                "not-allowed";
 
         }
 
 
-        // =========================================
-        // HOST TIDAK MENEKAN BELL
-        // =========================================
+        // =====================================================
+        // FUNGSI BUKA BELL
+        // =====================================================
+
+        function unlockBell() {
+
+            bellLocked = false;
+
+            bellButton.disabled = false;
+
+            bellButton.style.opacity =
+                "1";
+
+            bellButton.style.cursor =
+                "pointer";
+
+        }
+
+
+        // =====================================================
+        // CEK DATA ROOM
+        // =====================================================
+
+        if (!roomId) {
+
+            lockBell();
+
+            bellStatus.textContent =
+                "❌ Room tidak ditemukan.";
+
+            winnerText.textContent =
+                "Room ID tidak tersedia.";
+
+        }
+
+
+        // =====================================================
+        // HOST TIDAK BOLEH MENEKAN BELL
+        // =====================================================
 
         if (!playerId) {
 
-            bellLocked = true;
-
-            bellButton.disabled = true;
-
-            bellButton.style.opacity = "0.4";
-
-            bellButton.style.cursor =
-                "not-allowed";
+            lockBell();
 
             bellStatus.textContent =
                 "👑 Host mengatur permainan";
@@ -265,130 +324,157 @@
         }
 
 
-        // =========================================
+        // =====================================================
         // TEKAN BELL
-        // =========================================
+        // =====================================================
 
         async function pressBell() {
 
+            // Jangan proses jika sudah terkunci
             if (bellLocked) {
                 return;
             }
 
 
+            // Cek Player ID
             if (!playerId) {
 
-                console.log(
-                    "👑 Host tidak dapat menekan bell."
-                );
+                bellStatus.textContent =
+                    "❌ Player ID tidak ditemukan.";
+
+                winnerText.textContent =
+                    "Silakan kembali dan join room lagi.";
 
                 return;
             }
 
 
+            // Cek Room ID
             if (!roomId) {
 
-                alert(
-                    "❌ Room tidak ditemukan."
-                );
+                bellStatus.textContent =
+                    "❌ Room ID tidak ditemukan.";
+
+                winnerText.textContent =
+                    "Silakan kembali ke room.";
 
                 return;
             }
 
 
-            // Kunci sementara
-            // agar tombol tidak ditekan berkali-kali
-            bellLocked = true;
+            // =================================================
+            // KUNCI SEMENTARA
+            // =================================================
 
-            bellButton.disabled = true;
-
-            bellButton.style.opacity = "0.5";
-
-            bellButton.style.cursor =
-                "not-allowed";
+            lockBell();
 
             bellStatus.textContent =
                 "⏳ Memproses bell...";
 
+            winnerText.textContent =
+                "Menentukan siapa yang paling cepat...";
+
 
             try {
+
+                // =================================================
+                // MASUKKAN BELL KE DATABASE
+                // =================================================
 
                 const { data, error } =
                     await sb
                         .from("bell_battles")
-                        .insert([
-                            {
-                                room_id: roomId,
-                                round_number:
-                                    roundNumber,
-                                player_id:
-                                    playerId
-                            }
-                        ])
+                        .insert({
+                            room_id: roomId,
+                            round_number: roundNumber,
+                            player_id: playerId
+                        })
                         .select()
                         .single();
 
 
-                // =================================
-                // BERHASIL MENJADI PEMENANG
-                // =================================
+                // =================================================
+                // JIKA INSERT ERROR
+                // =================================================
 
-                if (!error) {
+                if (error) {
 
-                    console.log(
-                        "🏆 Kamu menang bell!",
-                        data
+                    console.error(
+                        "❌ Bell error:",
+                        error
                     );
 
-                    showWinner(
-                        playerName || "Player"
-                    );
+
+                    // Kemungkinan player lain
+                    // sudah menang lebih dulu
+                    if (
+                        error.code ===
+                        "23505"
+                    ) {
+
+                        bellStatus.textContent =
+                            "🔒 Bell sudah dimenangkan!";
+
+                        await loadWinner();
+
+                        return;
+                    }
+
+
+                    // Error lainnya
+                    unlockBell();
+
+                    bellStatus.textContent =
+                        "❌ Gagal menekan bell.";
+
+                    winnerText.textContent =
+                        error.message ||
+                        "Terjadi kesalahan.";
 
                     return;
                 }
 
 
-                // =================================
-                // KALAU KALAH BALAP
-                // =================================
+                // =================================================
+                // BERHASIL MENJADI PEMENANG
+                // =================================================
 
                 console.log(
-                    "🔒 Bell sudah dimenangkan player lain.",
+                    "🏆 Bell berhasil:",
+                    data
+                );
+
+
+                showWinner(
+                    playerName || "Player"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error:",
                     error
                 );
 
 
-                await loadWinner();
-
-
-            } catch (err) {
-
-                console.error(
-                    "❌ Error bell:",
-                    err
-                );
-
-                bellLocked = false;
-
-                bellButton.disabled = false;
-
-                bellButton.style.opacity =
-                    "1";
-
-                bellButton.style.cursor =
-                    "pointer";
+                unlockBell();
 
                 bellStatus.textContent =
-                    "🔔 Bell siap!";
+                    "❌ Terjadi kesalahan.";
+
+                winnerText.textContent =
+                    error.message ||
+                    "Silakan coba lagi.";
 
             }
 
         }
 
 
-        // =========================================
-        // AMBIL PEMENANG
-        // =========================================
+        // =====================================================
+        // AMBIL PEMENANG DARI DATABASE
+        // =====================================================
 
         async function loadWinner() {
 
@@ -400,12 +486,9 @@
             const { data, error } =
                 await sb
                     .from("bell_battles")
-                    .select(`
-                        id,
-                        player_id,
-                        round_number,
-                        pressed_at
-                    `)
+                    .select(
+                        "id, player_id, round_number, pressed_at"
+                    )
                     .eq(
                         "room_id",
                         roomId
@@ -417,6 +500,10 @@
                     .maybeSingle();
 
 
+            // =================================================
+            // ERROR
+            // =================================================
+
             if (error) {
 
                 console.error(
@@ -424,28 +511,34 @@
                     error
                 );
 
+                bellStatus.textContent =
+                    "❌ Gagal mengambil hasil bell.";
+
                 return;
             }
 
 
+            // =================================================
+            // BELUM ADA PEMENANG
+            // =================================================
+
             if (!data) {
 
-                bellLocked = false;
-
-                bellButton.disabled = false;
-
-                bellButton.style.opacity =
-                    "1";
-
-                bellButton.style.cursor =
-                    "pointer";
+                unlockBell();
 
                 bellStatus.textContent =
                     "🔔 Bell siap!";
 
+                winnerText.textContent =
+                    "Siapa paling cepat?";
+
                 return;
             }
 
+
+            // =================================================
+            // ADA PEMENANG
+            // =================================================
 
             await showWinnerById(
                 data.player_id
@@ -454,9 +547,9 @@
         }
 
 
-        // =========================================
-        // TAMPILKAN PEMENANG BERDASARKAN ID
-        // =========================================
+        // =====================================================
+        // AMBIL NAMA PEMENANG
+        // =====================================================
 
         async function showWinnerById(
             winnerPlayerId
@@ -476,7 +569,7 @@
             if (error) {
 
                 console.error(
-                    "❌ Gagal mengambil nama pemenang:",
+                    "❌ Gagal mengambil nama:",
                     error
                 );
 
@@ -488,30 +581,27 @@
             }
 
 
+            const winnerName =
+                data?.name ||
+                "Player";
+
+
             showWinner(
-                data?.name || "Player"
+                winnerName
             );
 
         }
 
 
-        // =========================================
+        // =====================================================
         // TAMPILKAN PEMENANG
-        // =========================================
+        // =====================================================
 
         function showWinner(
             winnerName
         ) {
 
-            bellLocked = true;
-
-            bellButton.disabled = true;
-
-            bellButton.style.opacity =
-                "0.35";
-
-            bellButton.style.cursor =
-                "not-allowed";
+            lockBell();
 
 
             bellStatus.textContent =
@@ -538,9 +628,9 @@
         }
 
 
-        // =========================================
+        // =====================================================
         // REALTIME BELL
-        // =========================================
+        // =====================================================
 
         function listenForBell() {
 
@@ -549,13 +639,16 @@
             }
 
 
-            sb
-                .channel(
+            const channel =
+                sb.channel(
                     "bell-battle-" +
                     roomId +
                     "-" +
                     roundNumber
-                )
+                );
+
+
+            channel
                 .on(
                     "postgres_changes",
                     {
@@ -574,10 +667,11 @@
                         );
 
 
+                        // Pastikan ronde sama
                         if (
-                            payload.new
-                                .round_number
-                            !==
+                            Number(
+                                payload.new.round_number
+                            ) !==
                             roundNumber
                         ) {
 
@@ -585,6 +679,7 @@
                         }
 
 
+                        // Tampilkan pemenang
                         await showWinnerById(
                             payload.new.player_id
                         );
@@ -605,9 +700,9 @@
         }
 
 
-        // =========================================
-        // CEK PEMENANG YANG SUDAH ADA
-        // =========================================
+        // =====================================================
+        // INISIALISASI
+        // =====================================================
 
         async function initializeBell() {
 
@@ -616,16 +711,19 @@
             }
 
 
+            // Cek apakah sudah ada pemenang
             await loadWinner();
 
+
+            // Aktifkan realtime
             listenForBell();
 
         }
 
 
-        // =========================================
-        // MULAI
-        // =========================================
+        // =====================================================
+        // MULAI GAME
+        // =====================================================
 
         initializeBell();
 
