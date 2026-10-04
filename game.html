@@ -14,6 +14,56 @@
 
     <link rel="stylesheet" href="style.css">
 
+
+    <!-- =====================================================
+         FIX MOBILE SCROLL
+    ====================================================== -->
+
+    <style>
+
+        html,
+        body {
+            min-height: 100%;
+            height: auto !important;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .container {
+            min-height: 100vh !important;
+            height: auto !important;
+            overflow: visible !important;
+            box-sizing: border-box;
+            padding-bottom: 70px !important;
+        }
+
+
+        #answerArea {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+
+        #answerInput {
+            display: block;
+            min-height: 120px;
+        }
+
+
+        #submitAnswerButton {
+            display: block;
+            min-height: 50px;
+        }
+
+    </style>
+
 </head>
 
 
@@ -21,9 +71,10 @@
 
     <main class="container">
 
-        <!-- =====================================================
+
+        <!-- =================================================
              HEADER
-        ====================================================== -->
+        ================================================== -->
 
         <div class="badge">
             🔥 GEN Z BATTLE
@@ -36,9 +87,9 @@
         </h1>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              PLAYER & ROOM
-        ====================================================== -->
+        ================================================== -->
 
         <div class="room-info">
 
@@ -70,9 +121,9 @@
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              RONDE
-        ====================================================== -->
+        ================================================== -->
 
         <div
             class="waiting"
@@ -90,9 +141,9 @@
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              PERTANYAAN
-        ====================================================== -->
+        ================================================== -->
 
         <div
             class="waiting"
@@ -103,7 +154,6 @@
                 ❓ PERTANYAAN
             </small>
 
-
             <h2 id="questionText">
                 Menunggu pertanyaan...
             </h2>
@@ -111,9 +161,9 @@
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              BELL BATTLE
-        ====================================================== -->
+        ================================================== -->
 
         <div
             style="
@@ -140,6 +190,8 @@
                 style="
                     width:190px;
                     height:190px;
+                    max-width:75vw;
+                    max-height:75vw;
                     border-radius:50%;
                     border:none;
                     font-size:65px;
@@ -165,6 +217,7 @@
                 id="winnerText"
                 style="
                     margin-top:22px;
+                    margin-bottom:0;
                 "
             >
                 Siapa paling cepat?
@@ -173,9 +226,9 @@
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              AREA JAWABAN
-        ====================================================== -->
+        ================================================== -->
 
         <div
             id="answerArea"
@@ -186,8 +239,17 @@
             "
         >
 
-            <h2>
-                ✍️ Jawaban Kamu
+            <small>
+                ✍️ JAWABAN
+            </small>
+
+
+            <h2
+                style="
+                    margin-top:10px;
+                "
+            >
+                Jawaban Kamu
             </h2>
 
 
@@ -198,7 +260,7 @@
                     margin-bottom:15px;
                 "
             >
-                Kamu memenangkan Bell!
+                🏆 Kamu memenangkan Bell!
             </p>
 
 
@@ -209,6 +271,7 @@
                 placeholder="Tulis jawaban kamu di sini..."
                 style="
                     width:100%;
+                    min-height:120px;
                     box-sizing:border-box;
                     padding:15px;
                     border-radius:12px;
@@ -230,6 +293,7 @@
                 style="
                     width:100%;
                     margin-top:15px;
+                    min-height:52px;
                     padding:15px;
                     border:none;
                     border-radius:12px;
@@ -254,18 +318,30 @@
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              SKOR
-        ====================================================== -->
+        ================================================== -->
 
         <div
             class="waiting"
-            style="margin-top:30px;"
+            style="
+                margin-top:30px;
+            "
         >
 
-            <h2>
-                🏆 Skor
+            <small>
+                🏆 SCORE
+            </small>
+
+
+            <h2
+                style="
+                    margin-top:10px;
+                "
+            >
+                Skor
             </h2>
+
 
             <p>
                 Skor akan diperbarui oleh Host.
@@ -274,20 +350,25 @@
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              FOOTER
-        ====================================================== -->
+        ================================================== -->
 
-        <p class="version">
+        <p
+            class="version"
+            style="
+                margin-top:30px;
+            "
+        >
             GEN Z BATTLE • REALTIME
         </p>
 
     </main>
 
 
-    <!-- =========================================================
+    <!-- =====================================================
          SUPABASE
-    ========================================================== -->
+    ====================================================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -387,7 +468,7 @@
 
 
         // =====================================================
-        // DATA DISPLAY
+        // TAMPILKAN DATA
         // =====================================================
 
         playerNameElement.textContent =
@@ -458,7 +539,7 @@
 
 
         // =====================================================
-        // RESET ANSWER
+        // RESET JAWABAN
         // =====================================================
 
         function resetAnswerArea() {
@@ -497,7 +578,7 @@
 
 
         // =====================================================
-        // SHOW ANSWER AREA
+        // TAMPILKAN AREA JAWABAN
         // =====================================================
 
         function showAnswerArea() {
@@ -507,13 +588,12 @@
             }
 
 
-            if (
-                !currentWinnerId
-            ) {
+            if (!currentWinnerId) {
                 return;
             }
 
 
+            // Bukan pemenang
             if (
                 currentWinnerId !==
                 playerId
@@ -527,12 +607,27 @@
             }
 
 
+            // Pemenang
             answerArea.style.display =
                 "block";
 
 
             answerInfo.textContent =
                 "🏆 Kamu memenangkan Bell! Silakan jawab pertanyaan.";
+
+
+            // Scroll otomatis ke area jawaban
+            setTimeout(
+                function() {
+
+                    answerArea.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                },
+                150
+            );
 
         }
 
@@ -674,7 +769,7 @@
 
 
         // =====================================================
-        // PRESS BELL
+        // TEKAN BELL
         // =====================================================
 
         async function pressBell() {
@@ -746,6 +841,7 @@
                     );
 
 
+                    // Player lain sudah menang
                     if (
                         error.code ===
                         "23505"
@@ -812,7 +908,7 @@
 
 
         // =====================================================
-        // LOAD WINNER
+        // LOAD PEMENANG BELL
         // =====================================================
 
         async function loadWinner() {
@@ -853,6 +949,7 @@
             }
 
 
+            // Belum ada pemenang
             if (!data) {
 
                 currentWinnerId =
@@ -890,14 +987,13 @@
             showAnswerArea();
 
 
-            // Cek apakah jawaban sudah pernah dikirim
             await checkExistingAnswer();
 
         }
 
 
         // =====================================================
-        // CHECK EXISTING ANSWER
+        // CEK JAWABAN YANG SUDAH ADA
         // =====================================================
 
         async function checkExistingAnswer() {
@@ -978,7 +1074,7 @@
 
 
         // =====================================================
-        // GET WINNER NAME
+        // AMBIL NAMA PEMENANG
         // =====================================================
 
         async function showWinnerById(
@@ -1025,7 +1121,7 @@
 
 
         // =====================================================
-        // SHOW WINNER
+        // TAMPILKAN PEMENANG
         // =====================================================
 
         function showWinner(
@@ -1060,7 +1156,7 @@
 
 
         // =====================================================
-        // SUBMIT ANSWER
+        // KIRIM JAWABAN
         // =====================================================
 
         async function submitAnswer() {
@@ -1127,7 +1223,6 @@
             submitAnswerButton.disabled =
                 true;
 
-
             answerInput.disabled =
                 true;
 
@@ -1185,6 +1280,7 @@
                     );
 
 
+                    // Sudah pernah menjawab
                     if (
                         error.code ===
                         "23505"
@@ -1196,6 +1292,7 @@
 
                         answerStatus.textContent =
                             "⚠️ Jawaban sudah dikirim sebelumnya.";
+
 
                         submitAnswerButton.textContent =
                             "✅ JAWABAN TERKIRIM";
@@ -1213,7 +1310,6 @@
 
                     answerInput.disabled =
                         false;
-
 
                     submitAnswerButton.disabled =
                         false;
@@ -1260,7 +1356,6 @@
 
                 answerInput.disabled =
                     false;
-
 
                 submitAnswerButton.disabled =
                     false;
@@ -1405,7 +1500,6 @@
 
                         showAnswerArea();
 
-
                     }
                 )
                 .subscribe(
@@ -1531,7 +1625,7 @@
 
 
         // =====================================================
-        // START GAME
+        // MULAI GAME
         // =====================================================
 
         initializeGame();
