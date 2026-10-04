@@ -16,50 +16,222 @@
 
 
     <!-- =====================================================
-         FIX MOBILE SCROLL
+         KHUSUS HALAMAN GAME
     ====================================================== -->
 
     <style>
 
-        html,
-        body {
+        /* ================================================
+           FIX SCROLL HP
+        ================================================ */
+
+        html {
             min-height: 100%;
-            height: auto !important;
-            overflow-y: auto !important;
-            overflow-x: hidden;
         }
 
-
         body {
-            margin: 0;
-            padding: 0;
+            min-height: 100vh !important;
+            height: auto !important;
+
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+
+            align-items: flex-start !important;
+
+            padding-top: 20px !important;
+            padding-bottom: 40px !important;
         }
 
 
         .container {
-            min-height: 100vh !important;
+            width: 100%;
+            max-width: 520px;
+
+            min-height: auto !important;
             height: auto !important;
-            overflow: visible !important;
-            box-sizing: border-box;
-            padding-bottom: 70px !important;
+
+            padding-bottom: 50px;
         }
 
+
+        /* ================================================
+           AREA BELL
+        ================================================ */
+
+        #bellArea {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+
+        /* ================================================
+           TOMBOL BELL
+        ================================================ */
+
+        #bellButton {
+            width: 190px;
+            height: 190px;
+
+            border-radius: 50%;
+            border: none;
+
+            font-size: 65px;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #ffcc00,
+                    #ff8c00
+                );
+
+            box-shadow:
+                0 10px 30px
+                rgba(255,140,0,0.4);
+
+            transition:
+                transform 0.1s,
+                opacity 0.2s;
+
+            -webkit-tap-highlight-color:
+                transparent;
+        }
+
+
+        #bellButton:active {
+            transform: scale(0.94);
+        }
+
+
+        #bellButton:disabled {
+            transform: none;
+        }
+
+
+        /* ================================================
+           AREA JAWABAN
+        ================================================ */
 
         #answerArea {
+            display: none;
+
             width: 100%;
+
+            margin-top: 25px !important;
+
             box-sizing: border-box;
         }
 
 
-        #answerInput {
+        #answerArea textarea {
             display: block;
+
+            width: 100%;
+
             min-height: 120px;
+
+            box-sizing: border-box;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.2);
+
+            background:
+                rgba(255,255,255,0.08);
+
+            color: inherit;
+
+            font-size: 16px;
+
+            resize: vertical;
+
+            outline: none;
+
+            font-family: inherit;
+        }
+
+
+        #answerArea textarea:focus {
+            border-color: #667eea;
         }
 
 
         #submitAnswerButton {
             display: block;
-            min-height: 50px;
+
+            width: 100%;
+
+            min-height: 52px;
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        #submitAnswerButton:disabled {
+            opacity: 0.6;
+
+            cursor: not-allowed;
+        }
+
+
+        /* ================================================
+           MOBILE
+        ================================================ */
+
+        @media (max-width: 480px) {
+
+            body {
+                padding:
+                    12px
+                    12px
+                    40px
+                    12px !important;
+            }
+
+
+            .container {
+                width: 100%;
+            }
+
+
+            #bellButton {
+                width: 170px;
+                height: 170px;
+
+                font-size: 58px;
+            }
+
+
+            #questionText {
+                font-size: 20px;
+
+                line-height: 1.45;
+            }
+
+
+            #winnerText {
+                font-size: 20px;
+
+                line-height: 1.4;
+            }
+
         }
 
     </style>
@@ -72,9 +244,9 @@
     <main class="container">
 
 
-        <!-- =================================================
+        <!-- =====================================================
              HEADER
-        ================================================== -->
+        ====================================================== -->
 
         <div class="badge">
             🔥 GEN Z BATTLE
@@ -87,9 +259,9 @@
         </h1>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              PLAYER & ROOM
-        ================================================== -->
+        ====================================================== -->
 
         <div class="room-info">
 
@@ -121,9 +293,9 @@
         </div>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              RONDE
-        ================================================== -->
+        ====================================================== -->
 
         <div
             class="waiting"
@@ -141,9 +313,9 @@
         </div>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              PERTANYAAN
-        ================================================== -->
+        ====================================================== -->
 
         <div
             class="waiting"
@@ -154,6 +326,7 @@
                 ❓ PERTANYAAN
             </small>
 
+
             <h2 id="questionText">
                 Menunggu pertanyaan...
             </h2>
@@ -161,16 +334,12 @@
         </div>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              BELL BATTLE
-        ================================================== -->
+        ====================================================== -->
 
-        <div
-            style="
-                margin-top:30px;
-                text-align:center;
-            "
-        >
+        <div id="bellArea">
+
 
             <p
                 id="bellStatus"
@@ -187,27 +356,6 @@
                 id="bellButton"
                 type="button"
                 onclick="pressBell()"
-                style="
-                    width:190px;
-                    height:190px;
-                    max-width:75vw;
-                    max-height:75vw;
-                    border-radius:50%;
-                    border:none;
-                    font-size:65px;
-                    cursor:pointer;
-                    background:linear-gradient(
-                        145deg,
-                        #ffcc00,
-                        #ff8c00
-                    );
-                    box-shadow:
-                        0 10px 30px
-                        rgba(255,140,0,0.4);
-                    transition:
-                        transform 0.1s,
-                        opacity 0.2s;
-                "
             >
                 🔔
             </button>
@@ -217,39 +365,26 @@
                 id="winnerText"
                 style="
                     margin-top:22px;
-                    margin-bottom:0;
                 "
             >
                 Siapa paling cepat?
             </h2>
 
+
         </div>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              AREA JAWABAN
-        ================================================== -->
+        ====================================================== -->
 
         <div
             id="answerArea"
             class="waiting"
-            style="
-                margin-top:30px;
-                display:none;
-            "
         >
 
-            <small>
-                ✍️ JAWABAN
-            </small>
-
-
-            <h2
-                style="
-                    margin-top:10px;
-                "
-            >
-                Jawaban Kamu
+            <h2>
+                ✍️ Jawaban Kamu
             </h2>
 
 
@@ -258,6 +393,7 @@
                 style="
                     opacity:0.8;
                     margin-bottom:15px;
+                    line-height:1.5;
                 "
             >
                 🏆 Kamu memenangkan Bell!
@@ -269,20 +405,6 @@
                 rows="4"
                 maxlength="500"
                 placeholder="Tulis jawaban kamu di sini..."
-                style="
-                    width:100%;
-                    min-height:120px;
-                    box-sizing:border-box;
-                    padding:15px;
-                    border-radius:12px;
-                    border:1px solid rgba(255,255,255,0.2);
-                    background:rgba(255,255,255,0.08);
-                    color:inherit;
-                    font-size:16px;
-                    resize:vertical;
-                    outline:none;
-                    font-family:inherit;
-                "
             ></textarea>
 
 
@@ -290,17 +412,6 @@
                 id="submitAnswerButton"
                 type="button"
                 onclick="submitAnswer()"
-                style="
-                    width:100%;
-                    margin-top:15px;
-                    min-height:52px;
-                    padding:15px;
-                    border:none;
-                    border-radius:12px;
-                    font-size:16px;
-                    font-weight:bold;
-                    cursor:pointer;
-                "
             >
                 📤 KIRIM JAWABAN
             </button>
@@ -312,36 +423,26 @@
                     margin-top:15px;
                     text-align:center;
                     white-space:pre-line;
+                    line-height:1.5;
                 "
             ></p>
+
 
         </div>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              SKOR
-        ================================================== -->
+        ====================================================== -->
 
         <div
             class="waiting"
-            style="
-                margin-top:30px;
-            "
+            style="margin-top:30px;"
         >
 
-            <small>
-                🏆 SCORE
-            </small>
-
-
-            <h2
-                style="
-                    margin-top:10px;
-                "
-            >
-                Skor
+            <h2>
+                🏆 Skor
             </h2>
-
 
             <p>
                 Skor akan diperbarui oleh Host.
@@ -350,25 +451,21 @@
         </div>
 
 
-        <!-- =================================================
+        <!-- =====================================================
              FOOTER
-        ================================================== -->
+        ====================================================== -->
 
-        <p
-            class="version"
-            style="
-                margin-top:30px;
-            "
-        >
+        <p class="version">
             GEN Z BATTLE • REALTIME
         </p>
+
 
     </main>
 
 
-    <!-- =====================================================
+    <!-- =========================================================
          SUPABASE
-    ====================================================== -->
+    ========================================================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -376,6 +473,7 @@
 
 
     <script>
+
 
         // =====================================================
         // DATA PLAYER
@@ -386,15 +484,18 @@
                 "genz_player_name"
             );
 
+
         const playerId =
             localStorage.getItem(
                 "genz_player_id"
             );
 
+
         const roomCode =
             localStorage.getItem(
                 "genz_room"
             );
+
 
         const roomId =
             localStorage.getItem(
@@ -411,55 +512,66 @@
                 "playerName"
             );
 
+
         const roomCodeElement =
             document.getElementById(
                 "roomCode"
             );
+
 
         const roundDisplay =
             document.getElementById(
                 "roundDisplay"
             );
 
+
         const questionText =
             document.getElementById(
                 "questionText"
             );
+
 
         const bellButton =
             document.getElementById(
                 "bellButton"
             );
 
+
         const bellStatus =
             document.getElementById(
                 "bellStatus"
             );
+
 
         const winnerText =
             document.getElementById(
                 "winnerText"
             );
 
+
         const answerArea =
             document.getElementById(
                 "answerArea"
             );
+
 
         const answerInput =
             document.getElementById(
                 "answerInput"
             );
 
+
         const answerInfo =
             document.getElementById(
                 "answerInfo"
             );
 
+
         const submitAnswerButton =
             document.getElementById(
                 "submitAnswerButton"
             );
+
 
         const answerStatus =
             document.getElementById(
@@ -474,12 +586,13 @@
         playerNameElement.textContent =
             playerName || "Player";
 
+
         roomCodeElement.textContent =
             roomCode || "------";
 
 
         // =====================================================
-        // STATE
+        // STATE GAME
         // =====================================================
 
         let currentRound = 1;
@@ -494,15 +607,14 @@
 
 
         // =====================================================
-        // LOCK BELL
+        // KUNCI BELL
         // =====================================================
 
         function lockBell() {
 
             bellLocked = true;
 
-            bellButton.disabled =
-                true;
+            bellButton.disabled = true;
 
             bellButton.style.opacity =
                 "0.35";
@@ -514,7 +626,7 @@
 
 
         // =====================================================
-        // UNLOCK BELL
+        // BUKA BELL
         // =====================================================
 
         function unlockBell() {
@@ -526,8 +638,7 @@
 
             bellLocked = false;
 
-            bellButton.disabled =
-                false;
+            bellButton.disabled = false;
 
             bellButton.style.opacity =
                 "1";
@@ -544,19 +655,25 @@
 
         function resetAnswerArea() {
 
-            currentWinnerId =
-                null;
+            currentWinnerId = null;
 
-            answerSubmitted =
-                false;
+            answerSubmitted = false;
 
 
             answerArea.style.display =
                 "none";
 
 
-            answerInput.value =
-                "";
+            /*
+             * Bell muncul kembali
+             * untuk ronde baru
+             */
+
+            bellButton.style.display =
+                "block";
+
+
+            answerInput.value = "";
 
 
             answerInput.disabled =
@@ -593,7 +710,10 @@
             }
 
 
-            // Bukan pemenang
+            /*
+             * Bukan pemenang
+             */
+
             if (
                 currentWinnerId !==
                 playerId
@@ -607,7 +727,10 @@
             }
 
 
-            // Pemenang
+            /*
+             * Player adalah pemenang
+             */
+
             answerArea.style.display =
                 "block";
 
@@ -616,24 +739,37 @@
                 "🏆 Kamu memenangkan Bell! Silakan jawab pertanyaan.";
 
 
-            // Scroll otomatis ke area jawaban
+            /*
+             * Bell disembunyikan
+             * supaya kolom jawaban langsung terlihat
+             */
+
+            bellButton.style.display =
+                "none";
+
+
+            bellStatus.textContent =
+                "🔒 BELL TERKUNCI";
+
+
+            /*
+             * Fokus ke kolom jawaban
+             */
+
             setTimeout(
                 function() {
 
-                    answerArea.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    });
+                    answerInput.focus();
 
                 },
-                150
+                300
             );
 
         }
 
 
         // =====================================================
-        // RENDER QUESTION
+        // TAMPILKAN PERTANYAAN
         // =====================================================
 
         function renderQuestion() {
@@ -643,13 +779,19 @@
                 currentRound;
 
 
+            /*
+             * ADA PERTANYAAN
+             */
+
             if (currentQuestion) {
 
                 questionText.textContent =
                     currentQuestion;
 
+
                 bellStatus.textContent =
                     "🔔 Bell siap!";
+
 
                 winnerText.textContent =
                     "Siapa paling cepat?";
@@ -657,12 +799,18 @@
 
                 resetAnswerArea();
 
+
                 unlockBell();
+
 
                 return;
 
             }
 
+
+            /*
+             * BELUM ADA PERTANYAAN
+             */
 
             questionText.textContent =
                 "Menunggu pertanyaan...";
@@ -677,6 +825,7 @@
 
 
             resetAnswerArea();
+
 
             lockBell();
 
@@ -719,6 +868,10 @@
                 .maybeSingle();
 
 
+            /*
+             * ERROR
+             */
+
             if (error) {
 
                 console.error(
@@ -736,6 +889,10 @@
 
             }
 
+
+            /*
+             * ROOM TIDAK ADA
+             */
 
             if (!room) {
 
@@ -799,6 +956,10 @@
             }
 
 
+            /*
+             * KUNCI BELL SEBELUM INSERT
+             */
+
             lockBell();
 
 
@@ -833,6 +994,10 @@
                     .single();
 
 
+                /*
+                 * ERROR
+                 */
+
                 if (error) {
 
                     console.error(
@@ -841,7 +1006,10 @@
                     );
 
 
-                    // Player lain sudah menang
+                    /*
+                     * Player lain sudah menang
+                     */
+
                     if (
                         error.code ===
                         "23505"
@@ -850,7 +1018,9 @@
                         bellStatus.textContent =
                             "🔒 Bell sudah dimenangkan!";
 
+
                         await loadWinner();
+
 
                         return;
 
@@ -860,14 +1030,28 @@
                     bellStatus.textContent =
                         "❌ Gagal menekan Bell.";
 
+
                     winnerText.textContent =
                         error.message ||
                         "Terjadi kesalahan.";
+
+
+                    /*
+                     * Jika gagal,
+                     * buka kembali Bell
+                     */
+
+                    unlockBell();
+
 
                     return;
 
                 }
 
+
+                /*
+                 * BERHASIL
+                 */
 
                 console.log(
                     "🏆 Bell berhasil:",
@@ -887,6 +1071,7 @@
 
                 showAnswerArea();
 
+
             } catch (error) {
 
                 console.error(
@@ -898,9 +1083,13 @@
                 bellStatus.textContent =
                     "❌ Terjadi kesalahan.";
 
+
                 winnerText.textContent =
                     error.message ||
                     "Silakan coba lagi.";
+
+
+                unlockBell();
 
             }
 
@@ -908,7 +1097,7 @@
 
 
         // =====================================================
-        // LOAD PEMENANG BELL
+        // LOAD PEMENANG
         // =====================================================
 
         async function loadWinner() {
@@ -937,6 +1126,10 @@
                 .maybeSingle();
 
 
+            /*
+             * ERROR
+             */
+
             if (error) {
 
                 console.error(
@@ -949,11 +1142,13 @@
             }
 
 
-            // Belum ada pemenang
+            /*
+             * BELUM ADA PEMENANG
+             */
+
             if (!data) {
 
-                currentWinnerId =
-                    null;
+                currentWinnerId = null;
 
 
                 winnerText.textContent =
@@ -968,12 +1163,21 @@
                     "none";
 
 
+                bellButton.style.display =
+                    "block";
+
+
                 unlockBell();
+
 
                 return;
 
             }
 
+
+            /*
+             * ADA PEMENANG
+             */
 
             currentWinnerId =
                 data.player_id;
@@ -986,6 +1190,10 @@
 
             showAnswerArea();
 
+
+            /*
+             * Cek jawaban sebelumnya
+             */
 
             await checkExistingAnswer();
 
@@ -1047,8 +1255,7 @@
             }
 
 
-            answerSubmitted =
-                true;
+            answerSubmitted = true;
 
 
             answerInput.value =
@@ -1103,9 +1310,11 @@
                     error
                 );
 
+
                 showWinner(
                     "Player"
                 );
+
 
                 return;
 
@@ -1181,6 +1390,10 @@
             }
 
 
+            /*
+             * Pastikan pemenang
+             */
+
             if (
                 currentWinnerId !==
                 playerId
@@ -1194,6 +1407,10 @@
             }
 
 
+            /*
+             * Jangan kirim dua kali
+             */
+
             if (answerSubmitted) {
 
                 answerStatus.textContent =
@@ -1204,9 +1421,17 @@
             }
 
 
+            /*
+             * Ambil jawaban
+             */
+
             const answer =
                 answerInput.value.trim();
 
+
+            /*
+             * Jawaban kosong
+             */
 
             if (!answer) {
 
@@ -1220,8 +1445,13 @@
             }
 
 
+            /*
+             * Kunci tombol
+             */
+
             submitAnswerButton.disabled =
                 true;
+
 
             answerInput.disabled =
                 true;
@@ -1252,6 +1482,7 @@
             try {
 
                 const {
+                    data,
                     error
                 } = await sb
                     .from("answers")
@@ -1269,8 +1500,14 @@
                         answer:
                             answer
 
-                    });
+                    })
+                    .select()
+                    .single();
 
+
+                /*
+                 * ERROR
+                 */
 
                 if (error) {
 
@@ -1280,7 +1517,10 @@
                     );
 
 
-                    // Sudah pernah menjawab
+                    /*
+                     * Sudah pernah menjawab
+                     */
+
                     if (
                         error.code ===
                         "23505"
@@ -1303,6 +1543,10 @@
                     }
 
 
+                    /*
+                     * Error lainnya
+                     */
+
                     answerStatus.textContent =
                         "❌ Gagal mengirim jawaban.\n" +
                         error.message;
@@ -1310,6 +1554,7 @@
 
                     answerInput.disabled =
                         false;
+
 
                     submitAnswerButton.disabled =
                         false;
@@ -1320,9 +1565,9 @@
                 }
 
 
-                // =========================================
-                // BERHASIL
-                // =========================================
+                /*
+                 * BERHASIL
+                 */
 
                 answerSubmitted =
                     true;
@@ -1337,7 +1582,8 @@
 
 
                 console.log(
-                    "✅ Jawaban berhasil masuk ke Supabase."
+                    "✅ Jawaban berhasil masuk ke Supabase:",
+                    data
                 );
 
 
@@ -1356,6 +1602,7 @@
 
                 answerInput.disabled =
                     false;
+
 
                 submitAnswerButton.disabled =
                     false;
@@ -1477,6 +1724,10 @@
                         );
 
 
+                        /*
+                         * Abaikan ronde lain
+                         */
+
                         if (
                             Number(
                                 payload.new.round_number
@@ -1556,6 +1807,10 @@
                         );
 
 
+                        /*
+                         * Abaikan ronde lain
+                         */
+
                         if (
                             Number(
                                 payload.new.round_number
@@ -1567,6 +1822,11 @@
 
                         }
 
+
+                        /*
+                         * Pastikan jawaban milik
+                         * player ini
+                         */
 
                         if (
                             payload.new.player_id !==
@@ -1607,13 +1867,25 @@
 
         async function initializeGame() {
 
+            /*
+             * Kondisi awal
+             */
+
             lockBell();
 
             resetAnswerArea();
 
 
+            /*
+             * Ambil room
+             */
+
             await loadRoomGame();
 
+
+            /*
+             * Aktifkan realtime
+             */
 
             listenForRoomChanges();
 
@@ -1625,10 +1897,11 @@
 
 
         // =====================================================
-        // MULAI GAME
+        // JALANKAN GAME
         // =====================================================
 
         initializeGame();
+
 
     </script>
 
