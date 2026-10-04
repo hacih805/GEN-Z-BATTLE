@@ -35,6 +35,8 @@
 
         <div class="room-form">
 
+            <!-- NAMA HOST -->
+
             <label>
                 NAMA HOST
             </label>
@@ -46,6 +48,8 @@
                 maxlength="20"
             >
 
+
+            <!-- JUMLAH PEMAIN -->
 
             <label>
                 JUMLAH PEMAIN
@@ -74,6 +78,37 @@
             </div>
 
 
+            <!-- JUMLAH RONDE -->
+
+            <label>
+                JUMLAH RONDE
+            </label>
+
+            <div class="player-counter">
+
+                <button
+                    type="button"
+                    onclick="changeRounds(-1)"
+                >
+                    −
+                </button>
+
+                <strong id="roundCount">
+                    5
+                </strong>
+
+                <button
+                    type="button"
+                    onclick="changeRounds(1)"
+                >
+                    +
+                </button>
+
+            </div>
+
+
+            <!-- KATEGORI -->
+
             <label>
                 KATEGORI
             </label>
@@ -99,6 +134,8 @@
             </select>
 
 
+            <!-- BUAT ROOM -->
+
             <button
                 class="create-button"
                 onclick="generateRoom()"
@@ -116,8 +153,89 @@
     </main>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="script.js"></script>
+    <!-- SUPABASE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase-config.js"></script>
+
+
+    <!-- SCRIPT LAMA -->
+
+    <script src="script.js"></script>
+
+
+    <script>
+
+        // =====================================================
+        // JUMLAH RONDE
+        // =====================================================
+
+        let selectedRounds = 5;
+
+
+        // =====================================================
+        // ELEMENT
+        // =====================================================
+
+        const roundCount =
+            document.getElementById(
+                "roundCount"
+            );
+
+
+        // =====================================================
+        // UBAH JUMLAH RONDE
+        // =====================================================
+
+        function changeRounds(change) {
+
+            selectedRounds += change;
+
+
+            // Minimum 1 ronde
+            if (selectedRounds < 1) {
+
+                selectedRounds = 1;
+
+            }
+
+
+            // Maximum 20 ronde
+            if (selectedRounds > 20) {
+
+                selectedRounds = 20;
+
+            }
+
+
+            roundCount.textContent =
+                selectedRounds;
+
+        }
+
+
+        // =====================================================
+        // SIMPAN JUMLAH RONDE
+        // =====================================================
+        //
+        // Fungsi ini dipanggil setelah room berhasil dibuat.
+        // Kita menyimpan pilihan ronde agar host-game.html
+        // bisa mengambilnya.
+        //
+        // =====================================================
+
+        function saveTotalRounds() {
+
+            localStorage.setItem(
+                "genz_total_rounds",
+                selectedRounds
+            );
+
+        }
+
+    </script>
+
 </body>
+
 </html>
