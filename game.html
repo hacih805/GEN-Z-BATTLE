@@ -2,6 +2,7 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -12,6 +13,7 @@
     <title>Game - GEN Z BATTLE</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 
@@ -27,6 +29,7 @@
             🔥 GEN Z BATTLE
         </div>
 
+
         <h1>
             BELL<br>
             <span>BATTLE</span>
@@ -40,13 +43,28 @@
         <div class="room-info">
 
             <div>
-                <span>👤 Player</span>
-                <strong id="playerName">-</strong>
+
+                <span>
+                    👤 Player
+                </span>
+
+                <strong id="playerName">
+                    -
+                </strong>
+
             </div>
 
+
             <div>
-                <span>🔑 Room</span>
-                <strong id="roomCode">------</strong>
+
+                <span>
+                    🔑 Room
+                </span>
+
+                <strong id="roomCode">
+                    ------
+                </strong>
+
             </div>
 
         </div>
@@ -84,6 +102,7 @@
             <small>
                 ❓ PERTANYAAN
             </small>
+
 
             <h2 id="questionText">
                 Menunggu pertanyaan...
@@ -186,6 +205,7 @@
             <textarea
                 id="answerInput"
                 rows="4"
+                maxlength="500"
                 placeholder="Tulis jawaban kamu di sini..."
                 style="
                     width:100%;
@@ -198,6 +218,7 @@
                     font-size:16px;
                     resize:vertical;
                     outline:none;
+                    font-family:inherit;
                 "
             ></textarea>
 
@@ -226,6 +247,7 @@
                 style="
                     margin-top:15px;
                     text-align:center;
+                    white-space:pre-line;
                 "
             ></p>
 
@@ -246,8 +268,7 @@
             </h2>
 
             <p>
-                Sistem skor akan kita tambahkan
-                setelah sistem jawaban stabil.
+                Skor akan diperbarui oleh Host.
             </p>
 
         </div>
@@ -276,65 +297,97 @@
     <script>
 
         // =====================================================
-        // DATA LOCAL STORAGE
+        // DATA PLAYER
         // =====================================================
 
         const playerName =
-            localStorage.getItem("genz_player_name");
+            localStorage.getItem(
+                "genz_player_name"
+            );
 
         const playerId =
-            localStorage.getItem("genz_player_id");
+            localStorage.getItem(
+                "genz_player_id"
+            );
 
         const roomCode =
-            localStorage.getItem("genz_room");
+            localStorage.getItem(
+                "genz_room"
+            );
 
         const roomId =
-            localStorage.getItem("genz_room_id");
+            localStorage.getItem(
+                "genz_room_id"
+            );
 
 
         // =====================================================
-        // ELEMENT HTML
+        // ELEMENT
         // =====================================================
 
         const playerNameElement =
-            document.getElementById("playerName");
+            document.getElementById(
+                "playerName"
+            );
 
         const roomCodeElement =
-            document.getElementById("roomCode");
+            document.getElementById(
+                "roomCode"
+            );
 
         const roundDisplay =
-            document.getElementById("roundDisplay");
+            document.getElementById(
+                "roundDisplay"
+            );
 
         const questionText =
-            document.getElementById("questionText");
+            document.getElementById(
+                "questionText"
+            );
 
         const bellButton =
-            document.getElementById("bellButton");
+            document.getElementById(
+                "bellButton"
+            );
 
         const bellStatus =
-            document.getElementById("bellStatus");
+            document.getElementById(
+                "bellStatus"
+            );
 
         const winnerText =
-            document.getElementById("winnerText");
+            document.getElementById(
+                "winnerText"
+            );
 
         const answerArea =
-            document.getElementById("answerArea");
+            document.getElementById(
+                "answerArea"
+            );
 
         const answerInput =
-            document.getElementById("answerInput");
+            document.getElementById(
+                "answerInput"
+            );
 
         const answerInfo =
-            document.getElementById("answerInfo");
+            document.getElementById(
+                "answerInfo"
+            );
 
         const submitAnswerButton =
-            document.getElementById("submitAnswerButton");
+            document.getElementById(
+                "submitAnswerButton"
+            );
 
         const answerStatus =
-            document.getElementById("answerStatus");
+            document.getElementById(
+                "answerStatus"
+            );
 
 
         // =====================================================
-        // TAMPILKAN DATA PLAYER
+        // DATA DISPLAY
         // =====================================================
 
         playerNameElement.textContent =
@@ -345,7 +398,7 @@
 
 
         // =====================================================
-        // STATE GAME
+        // STATE
         // =====================================================
 
         let currentRound = 1;
@@ -356,26 +409,31 @@
 
         let currentWinnerId = null;
 
+        let answerSubmitted = false;
+
 
         // =====================================================
-        // KUNCI BELL
+        // LOCK BELL
         // =====================================================
 
         function lockBell() {
 
             bellLocked = true;
 
-            bellButton.disabled = true;
+            bellButton.disabled =
+                true;
 
-            bellButton.style.opacity = "0.35";
+            bellButton.style.opacity =
+                "0.35";
 
-            bellButton.style.cursor = "not-allowed";
+            bellButton.style.cursor =
+                "not-allowed";
 
         }
 
 
         // =====================================================
-        // BUKA BELL
+        // UNLOCK BELL
         // =====================================================
 
         function unlockBell() {
@@ -384,70 +442,94 @@
                 return;
             }
 
+
             bellLocked = false;
 
-            bellButton.disabled = false;
+            bellButton.disabled =
+                false;
 
-            bellButton.style.opacity = "1";
+            bellButton.style.opacity =
+                "1";
 
-            bellButton.style.cursor = "pointer";
+            bellButton.style.cursor =
+                "pointer";
 
         }
 
 
         // =====================================================
-        // RESET AREA JAWABAN
+        // RESET ANSWER
         // =====================================================
 
         function resetAnswerArea() {
 
-            currentWinnerId = null;
+            currentWinnerId =
+                null;
 
-            answerArea.style.display = "none";
+            answerSubmitted =
+                false;
 
-            answerInput.value = "";
 
-            answerInput.disabled = false;
+            answerArea.style.display =
+                "none";
 
-            submitAnswerButton.disabled = false;
+
+            answerInput.value =
+                "";
+
+
+            answerInput.disabled =
+                false;
+
+
+            submitAnswerButton.disabled =
+                false;
+
 
             submitAnswerButton.textContent =
                 "📤 KIRIM JAWABAN";
 
-            answerStatus.textContent = "";
+
+            answerStatus.textContent =
+                "";
 
         }
 
 
         // =====================================================
-        // TAMPILKAN AREA JAWABAN
+        // SHOW ANSWER AREA
         // =====================================================
 
         function showAnswerArea() {
 
-            // Tidak ada player ID
             if (!playerId) {
                 return;
             }
 
 
-            // Tidak ada pemenang
-            if (!currentWinnerId) {
+            if (
+                !currentWinnerId
+            ) {
                 return;
             }
 
 
-            // Bukan pemenang Bell
-            if (currentWinnerId !== playerId) {
+            if (
+                currentWinnerId !==
+                playerId
+            ) {
 
-                answerArea.style.display = "none";
+                answerArea.style.display =
+                    "none";
 
                 return;
+
             }
 
 
-            // Pemenang Bell
-            answerArea.style.display = "block";
+            answerArea.style.display =
+                "block";
+
 
             answerInfo.textContent =
                 "🏆 Kamu memenangkan Bell! Silakan jawab pertanyaan.";
@@ -456,16 +538,16 @@
 
 
         // =====================================================
-        // TAMPILKAN PERTANYAAN
+        // RENDER QUESTION
         // =====================================================
 
         function renderQuestion() {
 
             roundDisplay.textContent =
-                "Ronde " + currentRound;
+                "Ronde " +
+                currentRound;
 
 
-            // Ada pertanyaan
             if (currentQuestion) {
 
                 questionText.textContent =
@@ -477,23 +559,27 @@
                 winnerText.textContent =
                     "Siapa paling cepat?";
 
+
                 resetAnswerArea();
 
                 unlockBell();
 
                 return;
+
             }
 
 
-            // Belum ada pertanyaan
             questionText.textContent =
                 "Menunggu pertanyaan...";
+
 
             bellStatus.textContent =
                 "⏳ Menunggu pertanyaan";
 
+
             winnerText.textContent =
                 "Host sedang menyiapkan pertanyaan.";
+
 
             resetAnswerArea();
 
@@ -503,7 +589,7 @@
 
 
         // =====================================================
-        // LOAD DATA ROOM
+        // LOAD ROOM
         // =====================================================
 
         async function loadRoomGame() {
@@ -519,6 +605,7 @@
                 lockBell();
 
                 return;
+
             }
 
 
@@ -530,11 +617,13 @@
                 .select(
                     "current_question, round_number, status"
                 )
-                .eq("id", roomId)
+                .eq(
+                    "id",
+                    roomId
+                )
                 .maybeSingle();
 
 
-            // Error
             if (error) {
 
                 console.error(
@@ -542,16 +631,17 @@
                     error
                 );
 
+
                 questionText.textContent =
                     "❌ Gagal mengambil game.";
 
                 lockBell();
 
                 return;
+
             }
 
 
-            // Room tidak ditemukan
             if (!room) {
 
                 questionText.textContent =
@@ -560,17 +650,23 @@
                 lockBell();
 
                 return;
+
             }
 
 
             currentRound =
-                Number(room.round_number) || 1;
+                Number(
+                    room.round_number
+                ) || 1;
+
 
             currentQuestion =
-                room.current_question || "";
+                room.current_question ||
+                "";
 
 
             renderQuestion();
+
 
             await loadWinner();
 
@@ -578,7 +674,7 @@
 
 
         // =====================================================
-        // TEKAN BELL
+        // PRESS BELL
         // =====================================================
 
         async function pressBell() {
@@ -591,9 +687,10 @@
             if (!playerId) {
 
                 bellStatus.textContent =
-                    "👑 Host mengatur permainan.";
+                    "❌ Player ID tidak ditemukan.";
 
                 return;
+
             }
 
 
@@ -603,16 +700,19 @@
                     "❌ Room tidak ditemukan.";
 
                 return;
+
             }
 
 
             lockBell();
 
+
             bellStatus.textContent =
-                "⏳ Memproses bell...";
+                "⏳ Memproses Bell...";
+
 
             winnerText.textContent =
-                "Menentukan siapa yang paling cepat...";
+                "Menentukan pemenang...";
 
 
             try {
@@ -624,18 +724,20 @@
                     .from("bell_battles")
                     .insert({
 
-                        room_id: roomId,
+                        room_id:
+                            roomId,
 
-                        round_number: currentRound,
+                        round_number:
+                            currentRound,
 
-                        player_id: playerId
+                        player_id:
+                            playerId
 
                     })
                     .select()
                     .single();
 
 
-                // Bell gagal
                 if (error) {
 
                     console.error(
@@ -644,8 +746,10 @@
                     );
 
 
-                    // Player lain sudah menang
-                    if (error.code === "23505") {
+                    if (
+                        error.code ===
+                        "23505"
+                    ) {
 
                         bellStatus.textContent =
                             "🔒 Bell sudah dimenangkan!";
@@ -653,21 +757,22 @@
                         await loadWinner();
 
                         return;
+
                     }
 
 
                     bellStatus.textContent =
-                        "❌ Gagal menekan bell.";
+                        "❌ Gagal menekan Bell.";
 
                     winnerText.textContent =
                         error.message ||
                         "Terjadi kesalahan.";
 
                     return;
+
                 }
 
 
-                // Bell berhasil
                 console.log(
                     "🏆 Bell berhasil:",
                     data
@@ -679,18 +784,20 @@
 
 
                 showWinner(
-                    playerName || "Player"
+                    playerName ||
+                    "Player"
                 );
 
-                showAnswerArea();
 
+                showAnswerArea();
 
             } catch (error) {
 
                 console.error(
-                    "❌ Error:",
+                    "❌ Error Bell:",
                     error
                 );
+
 
                 bellStatus.textContent =
                     "❌ Terjadi kesalahan.";
@@ -705,7 +812,7 @@
 
 
         // =====================================================
-        // LOAD PEMENANG BELL
+        // LOAD WINNER
         // =====================================================
 
         async function loadWinner() {
@@ -723,12 +830,17 @@
                 .select(
                     "id, player_id, round_number, pressed_at"
                 )
-                .eq("room_id", roomId)
-                .eq("round_number", currentRound)
+                .eq(
+                    "room_id",
+                    roomId
+                )
+                .eq(
+                    "round_number",
+                    currentRound
+                )
                 .maybeSingle();
 
 
-            // Error
             if (error) {
 
                 console.error(
@@ -737,30 +849,35 @@
                 );
 
                 return;
+
             }
 
 
-            // Belum ada pemenang
             if (!data) {
 
-                currentWinnerId = null;
+                currentWinnerId =
+                    null;
+
 
                 winnerText.textContent =
                     "Siapa paling cepat?";
 
+
                 bellStatus.textContent =
                     "🔔 Bell siap!";
+
 
                 answerArea.style.display =
                     "none";
 
+
                 unlockBell();
 
                 return;
+
             }
 
 
-            // Simpan ID pemenang
             currentWinnerId =
                 data.player_id;
 
@@ -769,13 +886,99 @@
                 data.player_id
             );
 
+
             showAnswerArea();
+
+
+            // Cek apakah jawaban sudah pernah dikirim
+            await checkExistingAnswer();
 
         }
 
 
         // =====================================================
-        // AMBIL NAMA PEMENANG
+        // CHECK EXISTING ANSWER
+        // =====================================================
+
+        async function checkExistingAnswer() {
+
+            if (
+                !roomId ||
+                !currentWinnerId ||
+                currentWinnerId !== playerId
+            ) {
+                return;
+            }
+
+
+            const {
+                data,
+                error
+            } = await sb
+                .from("answers")
+                .select(
+                    "id, answer"
+                )
+                .eq(
+                    "room_id",
+                    roomId
+                )
+                .eq(
+                    "round_number",
+                    currentRound
+                )
+                .eq(
+                    "player_id",
+                    playerId
+                )
+                .maybeSingle();
+
+
+            if (error) {
+
+                console.error(
+                    "❌ Gagal mengecek jawaban:",
+                    error
+                );
+
+                return;
+
+            }
+
+
+            if (!data) {
+                return;
+            }
+
+
+            answerSubmitted =
+                true;
+
+
+            answerInput.value =
+                data.answer;
+
+
+            answerInput.disabled =
+                true;
+
+
+            submitAnswerButton.disabled =
+                true;
+
+
+            submitAnswerButton.textContent =
+                "✅ JAWABAN TERKIRIM";
+
+
+            answerStatus.textContent =
+                "✅ Jawaban sudah diterima Host.";
+
+        }
+
+
+        // =====================================================
+        // GET WINNER NAME
         // =====================================================
 
         async function showWinnerById(
@@ -787,8 +990,13 @@
                 error
             } = await sb
                 .from("players")
-                .select("name")
-                .eq("id", winnerPlayerId)
+                .select(
+                    "name"
+                )
+                .eq(
+                    "id",
+                    winnerPlayerId
+                )
                 .maybeSingle();
 
 
@@ -799,26 +1007,33 @@
                     error
                 );
 
-                showWinner("Player");
+                showWinner(
+                    "Player"
+                );
 
                 return;
+
             }
 
 
             showWinner(
-                data?.name || "Player"
+                data?.name ||
+                "Player"
             );
 
         }
 
 
         // =====================================================
-        // TAMPILKAN PEMENANG
+        // SHOW WINNER
         // =====================================================
 
-        function showWinner(winnerName) {
+        function showWinner(
+            winnerName
+        ) {
 
             lockBell();
+
 
             bellStatus.textContent =
                 "🔒 BELL TERKUNCI";
@@ -845,43 +1060,31 @@
 
 
         // =====================================================
-        // KIRIM JAWABAN KE SUPABASE
+        // SUBMIT ANSWER
         // =====================================================
 
         async function submitAnswer() {
 
             if (!playerId) {
+
+                answerStatus.textContent =
+                    "❌ Player ID tidak ditemukan.";
+
                 return;
+
             }
 
 
             if (!roomId) {
 
                 answerStatus.textContent =
-                    "❌ Room tidak ditemukan.";
+                    "❌ Room ID tidak ditemukan.";
 
                 return;
+
             }
 
 
-            // Ambil jawaban
-            const answer =
-                answerInput.value.trim();
-
-
-            // Jawaban kosong
-            if (!answer) {
-
-                answerStatus.textContent =
-                    "⚠️ Jawaban belum diisi.";
-
-                answerInput.focus();
-
-                return;
-            }
-
-
-            // Pastikan player adalah pemenang
             if (
                 currentWinnerId !==
                 playerId
@@ -891,22 +1094,69 @@
                     "❌ Hanya pemenang Bell yang dapat menjawab.";
 
                 return;
+
             }
 
 
-            // Kunci input
-            submitAnswerButton.disabled = true;
+            if (answerSubmitted) {
 
-            answerInput.disabled = true;
+                answerStatus.textContent =
+                    "⚠️ Jawaban sudah dikirim.";
+
+                return;
+
+            }
+
+
+            const answer =
+                answerInput.value.trim();
+
+
+            if (!answer) {
+
+                answerStatus.textContent =
+                    "⚠️ Jawaban belum diisi.";
+
+                answerInput.focus();
+
+                return;
+
+            }
+
+
+            submitAnswerButton.disabled =
+                true;
+
+
+            answerInput.disabled =
+                true;
+
 
             answerStatus.textContent =
                 "⏳ Mengirim jawaban...";
 
 
+            console.log(
+                "📤 Mengirim jawaban:",
+                {
+                    room_id:
+                        roomId,
+
+                    round_number:
+                        currentRound,
+
+                    player_id:
+                        playerId,
+
+                    answer:
+                        answer
+                }
+            );
+
+
             try {
 
                 const {
-                    data,
                     error
                 } = await sb
                     .from("answers")
@@ -924,68 +1174,93 @@
                         answer:
                             answer
 
-                    })
-                    .select()
-                    .single();
+                    });
 
 
-                // Error
                 if (error) {
 
                     console.error(
-                        "❌ Gagal mengirim jawaban:",
+                        "❌ Supabase Answer Error:",
                         error
                     );
 
 
-                    // Sudah menjawab
-                    if (error.code === "23505") {
+                    if (
+                        error.code ===
+                        "23505"
+                    ) {
+
+                        answerSubmitted =
+                            true;
+
 
                         answerStatus.textContent =
-                            "⚠️ Kamu sudah mengirim jawaban untuk ronde ini.";
+                            "⚠️ Jawaban sudah dikirim sebelumnya.";
+
+                        submitAnswerButton.textContent =
+                            "✅ JAWABAN TERKIRIM";
+
 
                         return;
+
                     }
 
 
                     answerStatus.textContent =
-                        "❌ Gagal mengirim jawaban.";
+                        "❌ Gagal mengirim jawaban.\n" +
+                        error.message;
 
-                    answerInput.disabled = false;
+
+                    answerInput.disabled =
+                        false;
+
 
                     submitAnswerButton.disabled =
                         false;
 
+
                     return;
+
                 }
 
 
-                // Berhasil
-                console.log(
-                    "✅ Jawaban berhasil:",
-                    data
-                );
+                // =========================================
+                // BERHASIL
+                // =========================================
+
+                answerSubmitted =
+                    true;
 
 
                 answerStatus.textContent =
-                    "✅ Jawaban berhasil dikirim!";
+                    "✅ Jawaban berhasil dikirim ke Host!";
+
 
                 submitAnswerButton.textContent =
                     "✅ JAWABAN TERKIRIM";
 
 
+                console.log(
+                    "✅ Jawaban berhasil masuk ke Supabase."
+                );
+
+
             } catch (error) {
 
                 console.error(
-                    "❌ Error submit jawaban:",
+                    "❌ Submit Answer Error:",
                     error
                 );
 
 
                 answerStatus.textContent =
-                    "❌ Terjadi kesalahan.";
+                    "❌ Terjadi kesalahan.\n" +
+                    error.message;
 
-                answerInput.disabled = false;
+
+                answerInput.disabled =
+                    false;
+
 
                 submitAnswerButton.disabled =
                     false;
@@ -1014,9 +1289,15 @@
                 .on(
                     "postgres_changes",
                     {
-                        event: "UPDATE",
-                        schema: "public",
-                        table: "rooms",
+                        event:
+                            "UPDATE",
+
+                        schema:
+                            "public",
+
+                        table:
+                            "rooms",
+
                         filter:
                             "id=eq." +
                             roomId
@@ -1041,6 +1322,7 @@
 
 
                         renderQuestion();
+
 
                         await loadWinner();
 
@@ -1079,9 +1361,15 @@
                 .on(
                     "postgres_changes",
                     {
-                        event: "INSERT",
-                        schema: "public",
-                        table: "bell_battles",
+                        event:
+                            "INSERT",
+
+                        schema:
+                            "public",
+
+                        table:
+                            "bell_battles",
+
                         filter:
                             "room_id=eq." +
                             roomId
@@ -1094,7 +1382,6 @@
                         );
 
 
-                        // Abaikan ronde berbeda
                         if (
                             Number(
                                 payload.new.round_number
@@ -1103,6 +1390,7 @@
                         ) {
 
                             return;
+
                         }
 
 
@@ -1116,6 +1404,7 @@
 
 
                         showAnswerArea();
+
 
                     }
                 )
@@ -1134,7 +1423,92 @@
 
 
         // =====================================================
-        // INISIALISASI GAME
+        // REALTIME ANSWER
+        // =====================================================
+
+        function listenForAnswers() {
+
+            if (!roomId) {
+                return;
+            }
+
+
+            sb
+                .channel(
+                    "player-answer-" +
+                    roomId
+                )
+                .on(
+                    "postgres_changes",
+                    {
+                        event:
+                            "INSERT",
+
+                        schema:
+                            "public",
+
+                        table:
+                            "answers",
+
+                        filter:
+                            "room_id=eq." +
+                            roomId
+                    },
+                    function(payload) {
+
+                        console.log(
+                            "💬 Answer realtime:",
+                            payload
+                        );
+
+
+                        if (
+                            Number(
+                                payload.new.round_number
+                            ) !==
+                            currentRound
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        if (
+                            payload.new.player_id !==
+                            playerId
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        answerSubmitted =
+                            true;
+
+
+                        answerStatus.textContent =
+                            "✅ Jawaban berhasil diterima!";
+
+                    }
+                )
+                .subscribe(
+                    function(status) {
+
+                        console.log(
+                            "⚡ Realtime Answer:",
+                            status
+                        );
+
+                    }
+                );
+
+        }
+
+
+        // =====================================================
+        // INITIALIZE
         // =====================================================
 
         async function initializeGame() {
@@ -1143,16 +1517,23 @@
 
             resetAnswerArea();
 
+
             await loadRoomGame();
+
 
             listenForRoomChanges();
 
             listenForBell();
 
+            listenForAnswers();
+
         }
 
 
-        // Jalankan game
+        // =====================================================
+        // START GAME
+        // =====================================================
+
         initializeGame();
 
     </script>
