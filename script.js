@@ -64,6 +64,10 @@ async function generateRoom() {
     }
 
 
+    // ========================================
+    // KATEGORI
+    // ========================================
+
     const categoryElement =
         document.getElementById("category");
 
@@ -73,7 +77,36 @@ async function generateRoom() {
             : "random";
 
 
-    // Membuat kode room 6 karakter
+    // ========================================
+    // JUMLAH RONDE
+    // ========================================
+
+    let totalRounds = 5;
+
+    if (
+        typeof selectedRounds !== "undefined"
+    ) {
+
+        totalRounds =
+            Number(selectedRounds);
+
+    }
+
+
+    // Pengaman jumlah ronde
+
+    if (totalRounds < 1) {
+        totalRounds = 1;
+    }
+
+    if (totalRounds > 20) {
+        totalRounds = 20;
+    }
+
+
+    // ========================================
+    // BUAT KODE ROOM
+    // ========================================
 
     const characters =
         "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -87,13 +120,17 @@ async function generateRoom() {
                 Math.random() * characters.length
             );
 
-        roomCode += characters[randomIndex];
+        roomCode +=
+            characters[randomIndex];
+
     }
 
 
-    try {
+    // ========================================
+    // SIMPAN ROOM
+    // ========================================
 
-        // Simpan room ke Supabase
+    try {
 
         const { data, error } =
             await sb
@@ -104,12 +141,17 @@ async function generateRoom() {
                         host_name: hostName,
                         max_players: selectedPlayers,
                         category: category,
+                        total_rounds: totalRounds,
                         status: "waiting"
                     }
                 ])
                 .select()
                 .single();
 
+
+        // ========================================
+        // ERROR
+        // ========================================
 
         if (error) {
 
@@ -124,7 +166,9 @@ async function generateRoom() {
         }
 
 
-        // Simpan data room di HP Host
+        // ========================================
+        // SIMPAN DATA ROOM
+        // ========================================
 
         localStorage.setItem(
             "genz_host",
@@ -151,8 +195,15 @@ async function generateRoom() {
             data.id
         );
 
+        localStorage.setItem(
+            "genz_total_rounds",
+            data.total_rounds
+        );
 
-        // Masuk ke room
+
+        // ========================================
+        // MASUK KE ROOM
+        // ========================================
 
         window.location.href =
             "room.html";
@@ -165,7 +216,9 @@ async function generateRoom() {
         alert(
             "❌ Terjadi kesalahan saat membuat room."
         );
+
     }
+
 }
 
 
@@ -200,6 +253,10 @@ function loadRoomData() {
         roomCode || "------";
 
 
+    // ========================================
+    // HOST
+    // ========================================
+
     const hostDisplay =
         document.getElementById("hostDisplay");
 
@@ -207,8 +264,13 @@ function loadRoomData() {
 
         hostDisplay.textContent =
             hostName || "-";
+
     }
 
+
+    // ========================================
+    // MAX PLAYER
+    // ========================================
 
     const maxPlayersElement =
         document.getElementById("maxPlayers");
@@ -217,8 +279,13 @@ function loadRoomData() {
 
         maxPlayersElement.textContent =
             maxPlayers || "6";
+
     }
 
+
+    // ========================================
+    // KATEGORI
+    // ========================================
 
     const categoryNames = {
 
@@ -238,14 +305,42 @@ function loadRoomData() {
 
 
     const categoryDisplay =
-        document.getElementById("categoryDisplay");
+        document.getElementById(
+            "categoryDisplay"
+        );
 
     if (categoryDisplay) {
 
         categoryDisplay.textContent =
             categoryNames[category] ||
             "🎲 Random";
+
     }
+
+
+    // ========================================
+    // JUMLAH RONDE
+    // ========================================
+
+    const totalRounds =
+        localStorage.getItem(
+            "genz_total_rounds"
+        );
+
+
+    const totalRoundsElement =
+        document.getElementById(
+            "totalRounds"
+        );
+
+
+    if (totalRoundsElement) {
+
+        totalRoundsElement.textContent =
+            totalRounds || "5";
+
+    }
+
 }
 
 
@@ -256,7 +351,9 @@ function loadRoomData() {
 async function startGame() {
 
     const roomId =
-        localStorage.getItem("genz_room_id");
+        localStorage.getItem(
+            "genz_room_id"
+        );
 
 
     if (!roomId) {
@@ -277,7 +374,10 @@ async function startGame() {
                 .update({
                     status: "playing"
                 })
-                .eq("id", roomId);
+                .eq(
+                    "id",
+                    roomId
+                );
 
 
         if (error) {
@@ -297,6 +397,7 @@ async function startGame() {
             "🚀 Game berhasil dimulai!"
         );
 
+
     } catch (error) {
 
         console.error(error);
@@ -304,7 +405,9 @@ async function startGame() {
         alert(
             "❌ Terjadi kesalahan saat memulai game."
         );
+
     }
+
 }
 
 
@@ -313,7 +416,9 @@ async function startGame() {
 // ========================================
 
 if (
-    window.location.pathname.includes("room.html")
+    window.location.pathname.includes(
+        "room.html"
+    )
 ) {
 
     loadRoomData();
