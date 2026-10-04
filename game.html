@@ -15,18 +15,15 @@
     <link rel="stylesheet" href="style.css">
 
 
-    <!-- =====================================================
-         KHUSUS HALAMAN GAME
-    ====================================================== -->
-
     <style>
 
-        /* ================================================
-           FIX SCROLL HP
-        ================================================ */
+        /* =====================================================
+           FIX SCROLL MOBILE
+        ====================================================== */
 
         html {
             min-height: 100%;
+            height: auto !important;
         }
 
         body {
@@ -39,9 +36,8 @@
             align-items: flex-start !important;
 
             padding-top: 20px !important;
-            padding-bottom: 40px !important;
+            padding-bottom: 50px !important;
         }
-
 
         .container {
             width: 100%;
@@ -50,23 +46,23 @@
             min-height: auto !important;
             height: auto !important;
 
-            padding-bottom: 50px;
+            overflow: visible !important;
+
+            box-sizing: border-box;
+
+            padding-bottom: 60px !important;
         }
 
 
-        /* ================================================
-           AREA BELL
-        ================================================ */
+        /* =====================================================
+           BELL
+        ====================================================== */
 
         #bellArea {
             margin-top: 30px;
             text-align: center;
         }
 
-
-        /* ================================================
-           TOMBOL BELL
-        ================================================ */
 
         #bellButton {
             width: 190px;
@@ -109,9 +105,9 @@
         }
 
 
-        /* ================================================
-           AREA JAWABAN
-        ================================================ */
+        /* =====================================================
+           JAWABAN
+        ====================================================== */
 
         #answerArea {
             display: none;
@@ -191,9 +187,137 @@
         }
 
 
-        /* ================================================
+        /* =====================================================
+           FINAL LEADERBOARD
+        ====================================================== */
+
+        #finalPanel {
+            display: none;
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            box-sizing: border-box;
+        }
+
+
+        #finalWinner {
+            text-align: center;
+
+            padding: 25px 15px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            margin-bottom: 20px;
+        }
+
+
+        #finalWinner .trophy {
+            font-size: 65px;
+
+            line-height: 1;
+        }
+
+
+        #finalWinnerName {
+            font-size: 28px;
+
+            margin-top: 12px;
+
+            margin-bottom: 5px;
+
+            word-break: break-word;
+        }
+
+
+        #finalWinnerScore {
+            font-size: 18px;
+
+            opacity: 0.85;
+        }
+
+
+        .leaderboard-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 14px;
+
+            margin-bottom: 10px;
+
+            border-radius: 15px;
+
+            background:
+                rgba(255,255,255,0.06);
+
+            box-sizing: border-box;
+
+            width: 100%;
+        }
+
+
+        .leaderboard-rank {
+            width: 42px;
+
+            min-width: 42px;
+
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            font-size: 21px;
+        }
+
+
+        .leaderboard-name {
+            flex: 1;
+
+            min-width: 0;
+
+            word-break: break-word;
+        }
+
+
+        .leaderboard-name strong {
+            font-size: 17px;
+        }
+
+
+        .leaderboard-score {
+            white-space: nowrap;
+
+            font-weight: bold;
+
+            font-size: 17px;
+        }
+
+
+        #backMenuButton {
+            width: 100%;
+
+            margin-top: 20px;
+        }
+
+
+        /* =====================================================
            MOBILE
-        ================================================ */
+        ====================================================== */
 
         @media (max-width: 480px) {
 
@@ -201,7 +325,7 @@
                 padding:
                     12px
                     12px
-                    40px
+                    50px
                     12px !important;
             }
 
@@ -213,6 +337,7 @@
 
             #bellButton {
                 width: 170px;
+
                 height: 170px;
 
                 font-size: 58px;
@@ -232,6 +357,11 @@
                 line-height: 1.4;
             }
 
+
+            #finalWinnerName {
+                font-size: 25px;
+            }
+
         }
 
     </style>
@@ -245,219 +375,269 @@
 
 
         <!-- =====================================================
-             HEADER
+             GAME AREA
         ====================================================== -->
 
-        <div class="badge">
-            🔥 GEN Z BATTLE
+        <div id="gameArea">
+
+
+            <!-- HEADER -->
+
+            <div class="badge">
+                🔥 GEN Z BATTLE
+            </div>
+
+
+            <h1>
+                BELL<br>
+                <span>BATTLE</span>
+            </h1>
+
+
+            <!-- PLAYER & ROOM -->
+
+            <div class="room-info">
+
+                <div>
+
+                    <span>
+                        👤 Player
+                    </span>
+
+                    <strong id="playerName">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        🔑 Room
+                    </span>
+
+                    <strong id="roomCode">
+                        ------
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- RONDE -->
+
+            <div
+                class="waiting"
+                style="margin-top:20px;"
+            >
+
+                <small>
+                    RONDE
+                </small>
+
+                <h2 id="roundDisplay">
+                    Ronde 1
+                </h2>
+
+            </div>
+
+
+            <!-- PERTANYAAN -->
+
+            <div
+                class="waiting"
+                style="margin-top:20px;"
+            >
+
+                <small>
+                    ❓ PERTANYAAN
+                </small>
+
+
+                <h2 id="questionText">
+                    Menunggu pertanyaan...
+                </h2>
+
+            </div>
+
+
+            <!-- BELL -->
+
+            <div id="bellArea">
+
+                <p
+                    id="bellStatus"
+                    style="
+                        margin-bottom:18px;
+                        opacity:0.85;
+                    "
+                >
+                    ⏳ Menunggu pertanyaan
+                </p>
+
+
+                <button
+                    id="bellButton"
+                    type="button"
+                    onclick="pressBell()"
+                >
+                    🔔
+                </button>
+
+
+                <h2
+                    id="winnerText"
+                    style="
+                        margin-top:22px;
+                    "
+                >
+                    Siapa paling cepat?
+                </h2>
+
+            </div>
+
+
+            <!-- JAWABAN -->
+
+            <div
+                id="answerArea"
+                class="waiting"
+            >
+
+                <h2>
+                    ✍️ Jawaban Kamu
+                </h2>
+
+
+                <p
+                    id="answerInfo"
+                    style="
+                        opacity:0.8;
+                        margin-bottom:15px;
+                        line-height:1.5;
+                    "
+                >
+                    🏆 Kamu memenangkan Bell!
+                </p>
+
+
+                <textarea
+                    id="answerInput"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="Tulis jawaban kamu di sini..."
+                ></textarea>
+
+
+                <button
+                    id="submitAnswerButton"
+                    type="button"
+                    onclick="submitAnswer()"
+                >
+                    📤 KIRIM JAWABAN
+                </button>
+
+
+                <p
+                    id="answerStatus"
+                    style="
+                        margin-top:15px;
+                        text-align:center;
+                        white-space:pre-line;
+                        line-height:1.5;
+                    "
+                ></p>
+
+            </div>
+
+
+            <!-- SKOR -->
+
+            <div
+                class="waiting"
+                style="margin-top:30px;"
+            >
+
+                <h2>
+                    🏆 Skor
+                </h2>
+
+                <p>
+                    Skor akan diperbarui oleh Host.
+                </p>
+
+            </div>
+
+
+            <p class="version">
+                GEN Z BATTLE • REALTIME
+            </p>
+
         </div>
 
 
-        <h1>
-            BELL<br>
-            <span>BATTLE</span>
-        </h1>
-
-
         <!-- =====================================================
-             PLAYER & ROOM
+             FINAL LEADERBOARD
         ====================================================== -->
 
-        <div class="room-info">
+        <div
+            id="finalPanel"
+            class="waiting"
+        >
 
-            <div>
+            <div id="finalWinner">
 
-                <span>
-                    👤 Player
-                </span>
+                <div class="trophy">
+                    🏆
+                </div>
 
-                <strong id="playerName">
+
+                <small>
+                    🎉 PEMENANG GEN Z BATTLE
+                </small>
+
+
+                <h2 id="finalWinnerName">
                     -
-                </strong>
+                </h2>
+
+
+                <div id="finalWinnerScore">
+                    0 POIN
+                </div>
 
             </div>
 
 
-            <div>
+            <small>
+                🏆 HASIL AKHIR
+            </small>
 
-                <span>
-                    🔑 Room
-                </span>
 
-                <strong id="roomCode">
-                    ------
-                </strong>
-
+            <div
+                id="finalLeaderboard"
+                style="margin-top:15px;"
+            >
+                Memuat hasil...
             </div>
 
-        </div>
-
-
-        <!-- =====================================================
-             RONDE
-        ====================================================== -->
-
-        <div
-            class="waiting"
-            style="margin-top:20px;"
-        >
-
-            <small>
-                RONDE
-            </small>
-
-            <h2 id="roundDisplay">
-                Ronde 1
-            </h2>
-
-        </div>
-
-
-        <!-- =====================================================
-             PERTANYAAN
-        ====================================================== -->
-
-        <div
-            class="waiting"
-            style="margin-top:20px;"
-        >
-
-            <small>
-                ❓ PERTANYAAN
-            </small>
-
-
-            <h2 id="questionText">
-                Menunggu pertanyaan...
-            </h2>
-
-        </div>
-
-
-        <!-- =====================================================
-             BELL BATTLE
-        ====================================================== -->
-
-        <div id="bellArea">
-
-
-            <p
-                id="bellStatus"
-                style="
-                    margin-bottom:18px;
-                    opacity:0.85;
-                "
-            >
-                ⏳ Menunggu pertanyaan
-            </p>
-
 
             <button
-                id="bellButton"
-                type="button"
-                onclick="pressBell()"
+                id="backMenuButton"
+                class="create-button"
+                onclick="window.location.href='index.html'"
             >
-                🔔
+                🏠 KEMBALI KE MENU
             </button>
 
 
-            <h2
-                id="winnerText"
-                style="
-                    margin-top:22px;
-                "
-            >
-                Siapa paling cepat?
-            </h2>
-
-
-        </div>
-
-
-        <!-- =====================================================
-             AREA JAWABAN
-        ====================================================== -->
-
-        <div
-            id="answerArea"
-            class="waiting"
-        >
-
-            <h2>
-                ✍️ Jawaban Kamu
-            </h2>
-
-
-            <p
-                id="answerInfo"
-                style="
-                    opacity:0.8;
-                    margin-bottom:15px;
-                    line-height:1.5;
-                "
-            >
-                🏆 Kamu memenangkan Bell!
-            </p>
-
-
-            <textarea
-                id="answerInput"
-                rows="4"
-                maxlength="500"
-                placeholder="Tulis jawaban kamu di sini..."
-            ></textarea>
-
-
-            <button
-                id="submitAnswerButton"
-                type="button"
-                onclick="submitAnswer()"
-            >
-                📤 KIRIM JAWABAN
-            </button>
-
-
-            <p
-                id="answerStatus"
-                style="
-                    margin-top:15px;
-                    text-align:center;
-                    white-space:pre-line;
-                    line-height:1.5;
-                "
-            ></p>
-
-
-        </div>
-
-
-        <!-- =====================================================
-             SKOR
-        ====================================================== -->
-
-        <div
-            class="waiting"
-            style="margin-top:30px;"
-        >
-
-            <h2>
-                🏆 Skor
-            </h2>
-
-            <p>
-                Skor akan diperbarui oleh Host.
+            <p class="version">
+                GEN Z BATTLE • FINAL RESULT
             </p>
 
         </div>
-
-
-        <!-- =====================================================
-             FOOTER
-        ====================================================== -->
-
-        <p class="version">
-            GEN Z BATTLE • REALTIME
-        </p>
 
 
     </main>
@@ -506,6 +686,18 @@
         // =====================================================
         // ELEMENT
         // =====================================================
+
+        const gameArea =
+            document.getElementById(
+                "gameArea"
+            );
+
+
+        const finalPanel =
+            document.getElementById(
+                "finalPanel"
+            );
+
 
         const playerNameElement =
             document.getElementById(
@@ -579,6 +771,24 @@
             );
 
 
+        const finalWinnerName =
+            document.getElementById(
+                "finalWinnerName"
+            );
+
+
+        const finalWinnerScore =
+            document.getElementById(
+                "finalWinnerScore"
+            );
+
+
+        const finalLeaderboard =
+            document.getElementById(
+                "finalLeaderboard"
+            );
+
+
         // =====================================================
         // TAMPILKAN DATA
         // =====================================================
@@ -592,7 +802,7 @@
 
 
         // =====================================================
-        // STATE GAME
+        // STATE
         // =====================================================
 
         let currentRound = 1;
@@ -604,6 +814,31 @@
         let currentWinnerId = null;
 
         let answerSubmitted = false;
+
+        let gameFinished = false;
+
+
+        // =====================================================
+        // ESCAPE HTML
+        // =====================================================
+
+        function escapeHTML(text) {
+
+            if (
+                text === null ||
+                text === undefined
+            ) {
+                return "";
+            }
+
+            return String(text)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
 
 
         // =====================================================
@@ -631,7 +866,7 @@
 
         function unlockBell() {
 
-            if (!playerId) {
+            if (!playerId || gameFinished) {
                 return;
             }
 
@@ -655,25 +890,23 @@
 
         function resetAnswerArea() {
 
-            currentWinnerId = null;
+            currentWinnerId =
+                null;
 
-            answerSubmitted = false;
+            answerSubmitted =
+                false;
 
 
             answerArea.style.display =
                 "none";
 
 
-            /*
-             * Bell muncul kembali
-             * untuk ronde baru
-             */
-
             bellButton.style.display =
                 "block";
 
 
-            answerInput.value = "";
+            answerInput.value =
+                "";
 
 
             answerInput.disabled =
@@ -700,12 +933,11 @@
 
         function showAnswerArea() {
 
-            if (!playerId) {
-                return;
-            }
-
-
-            if (!currentWinnerId) {
+            if (
+                !playerId ||
+                !currentWinnerId ||
+                gameFinished
+            ) {
                 return;
             }
 
@@ -728,7 +960,7 @@
 
 
             /*
-             * Player adalah pemenang
+             * Pemenang Bell
              */
 
             answerArea.style.display =
@@ -739,11 +971,6 @@
                 "🏆 Kamu memenangkan Bell! Silakan jawab pertanyaan.";
 
 
-            /*
-             * Bell disembunyikan
-             * supaya kolom jawaban langsung terlihat
-             */
-
             bellButton.style.display =
                 "none";
 
@@ -752,14 +979,12 @@
                 "🔒 BELL TERKUNCI";
 
 
-            /*
-             * Fokus ke kolom jawaban
-             */
-
             setTimeout(
                 function() {
 
-                    answerInput.focus();
+                    if (!gameFinished) {
+                        answerInput.focus();
+                    }
 
                 },
                 300
@@ -769,7 +994,7 @@
 
 
         // =====================================================
-        // TAMPILKAN PERTANYAAN
+        // RENDER PERTANYAAN
         // =====================================================
 
         function renderQuestion() {
@@ -778,10 +1003,6 @@
                 "Ronde " +
                 currentRound;
 
-
-            /*
-             * ADA PERTANYAAN
-             */
 
             if (currentQuestion) {
 
@@ -807,10 +1028,6 @@
 
             }
 
-
-            /*
-             * BELUM ADA PERTANYAAN
-             */
 
             questionText.textContent =
                 "Menunggu pertanyaan...";
@@ -868,17 +1085,12 @@
                 .maybeSingle();
 
 
-            /*
-             * ERROR
-             */
-
             if (error) {
 
                 console.error(
                     "❌ Gagal mengambil room:",
                     error
                 );
-
 
                 questionText.textContent =
                     "❌ Gagal mengambil game.";
@@ -889,10 +1101,6 @@
 
             }
 
-
-            /*
-             * ROOM TIDAK ADA
-             */
 
             if (!room) {
 
@@ -917,8 +1125,28 @@
                 "";
 
 
-            renderQuestion();
+            /*
+             * GAME SUDAH SELESAI
+             */
 
+            if (
+                room.status ===
+                "finished"
+            ) {
+
+                gameFinished =
+                    true;
+
+                lockBell();
+
+                await showFinalLeaderboard();
+
+                return;
+
+            }
+
+
+            renderQuestion();
 
             await loadWinner();
 
@@ -931,7 +1159,10 @@
 
         async function pressBell() {
 
-            if (bellLocked) {
+            if (
+                bellLocked ||
+                gameFinished
+            ) {
                 return;
             }
 
@@ -955,10 +1186,6 @@
 
             }
 
-
-            /*
-             * KUNCI BELL SEBELUM INSERT
-             */
 
             lockBell();
 
@@ -994,10 +1221,6 @@
                     .single();
 
 
-                /*
-                 * ERROR
-                 */
-
                 if (error) {
 
                     console.error(
@@ -1005,10 +1228,6 @@
                         error
                     );
 
-
-                    /*
-                     * Player lain sudah menang
-                     */
 
                     if (
                         error.code ===
@@ -1020,7 +1239,6 @@
 
 
                         await loadWinner();
-
 
                         return;
 
@@ -1036,22 +1254,12 @@
                         "Terjadi kesalahan.";
 
 
-                    /*
-                     * Jika gagal,
-                     * buka kembali Bell
-                     */
-
                     unlockBell();
-
 
                     return;
 
                 }
 
-
-                /*
-                 * BERHASIL
-                 */
 
                 console.log(
                     "🏆 Bell berhasil:",
@@ -1102,7 +1310,10 @@
 
         async function loadWinner() {
 
-            if (!roomId) {
+            if (
+                !roomId ||
+                gameFinished
+            ) {
                 return;
             }
 
@@ -1126,10 +1337,6 @@
                 .maybeSingle();
 
 
-            /*
-             * ERROR
-             */
-
             if (error) {
 
                 console.error(
@@ -1142,13 +1349,10 @@
             }
 
 
-            /*
-             * BELUM ADA PEMENANG
-             */
-
             if (!data) {
 
-                currentWinnerId = null;
+                currentWinnerId =
+                    null;
 
 
                 winnerText.textContent =
@@ -1169,15 +1373,10 @@
 
                 unlockBell();
 
-
                 return;
 
             }
 
-
-            /*
-             * ADA PEMENANG
-             */
 
             currentWinnerId =
                 data.player_id;
@@ -1191,17 +1390,13 @@
             showAnswerArea();
 
 
-            /*
-             * Cek jawaban sebelumnya
-             */
-
             await checkExistingAnswer();
 
         }
 
 
         // =====================================================
-        // CEK JAWABAN YANG SUDAH ADA
+        // CEK JAWABAN
         // =====================================================
 
         async function checkExistingAnswer() {
@@ -1255,7 +1450,8 @@
             }
 
 
-            answerSubmitted = true;
+            answerSubmitted =
+                true;
 
 
             answerInput.value =
@@ -1281,7 +1477,7 @@
 
 
         // =====================================================
-        // AMBIL NAMA PEMENANG
+        // NAMA PEMENANG
         // =====================================================
 
         async function showWinnerById(
@@ -1390,10 +1586,6 @@
             }
 
 
-            /*
-             * Pastikan pemenang
-             */
-
             if (
                 currentWinnerId !==
                 playerId
@@ -1407,10 +1599,6 @@
             }
 
 
-            /*
-             * Jangan kirim dua kali
-             */
-
             if (answerSubmitted) {
 
                 answerStatus.textContent =
@@ -1421,17 +1609,9 @@
             }
 
 
-            /*
-             * Ambil jawaban
-             */
-
             const answer =
                 answerInput.value.trim();
 
-
-            /*
-             * Jawaban kosong
-             */
 
             if (!answer) {
 
@@ -1445,10 +1625,6 @@
             }
 
 
-            /*
-             * Kunci tombol
-             */
-
             submitAnswerButton.disabled =
                 true;
 
@@ -1459,24 +1635,6 @@
 
             answerStatus.textContent =
                 "⏳ Mengirim jawaban...";
-
-
-            console.log(
-                "📤 Mengirim jawaban:",
-                {
-                    room_id:
-                        roomId,
-
-                    round_number:
-                        currentRound,
-
-                    player_id:
-                        playerId,
-
-                    answer:
-                        answer
-                }
-            );
 
 
             try {
@@ -1505,10 +1663,6 @@
                     .single();
 
 
-                /*
-                 * ERROR
-                 */
-
                 if (error) {
 
                     console.error(
@@ -1516,10 +1670,6 @@
                         error
                     );
 
-
-                    /*
-                     * Sudah pernah menjawab
-                     */
 
                     if (
                         error.code ===
@@ -1543,10 +1693,6 @@
                     }
 
 
-                    /*
-                     * Error lainnya
-                     */
-
                     answerStatus.textContent =
                         "❌ Gagal mengirim jawaban.\n" +
                         error.message;
@@ -1565,10 +1711,6 @@
                 }
 
 
-                /*
-                 * BERHASIL
-                 */
-
                 answerSubmitted =
                     true;
 
@@ -1582,7 +1724,7 @@
 
 
                 console.log(
-                    "✅ Jawaban berhasil masuk ke Supabase:",
+                    "✅ Jawaban berhasil:",
                     data
                 );
 
@@ -1608,6 +1750,176 @@
                     false;
 
             }
+
+        }
+
+
+        // =====================================================
+        // FINAL LEADERBOARD
+        // =====================================================
+
+        async function showFinalLeaderboard() {
+
+            if (
+                !roomId
+            ) {
+                return;
+            }
+
+
+            gameFinished =
+                true;
+
+
+            lockBell();
+
+
+            const {
+                data: players,
+                error
+            } = await sb
+                .from("players")
+                .select(
+                    "id, name, score"
+                )
+                .eq(
+                    "room_id",
+                    roomId
+                )
+                .order(
+                    "score",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+            if (error) {
+
+                console.error(
+                    "❌ Gagal mengambil leaderboard:",
+                    error
+                );
+
+
+                finalLeaderboard.innerHTML =
+                    "❌ Gagal mengambil hasil akhir.";
+
+                gameArea.style.display =
+                    "none";
+
+                finalPanel.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            gameArea.style.display =
+                "none";
+
+
+            finalPanel.style.display =
+                "block";
+
+
+            if (
+                !players ||
+                players.length === 0
+            ) {
+
+                finalWinnerName.textContent =
+                    "Belum ada Player";
+
+
+                finalWinnerScore.textContent =
+                    "0 POIN";
+
+
+                finalLeaderboard.innerHTML =
+                    "Tidak ada data Player.";
+
+                return;
+
+            }
+
+
+            const winner =
+                players[0];
+
+
+            finalWinnerName.textContent =
+                winner.name;
+
+
+            finalWinnerScore.textContent =
+                Number(
+                    winner.score || 0
+                ) +
+                " POIN";
+
+
+            finalLeaderboard.innerHTML =
+                players
+                    .map(
+                        (player, index) => {
+
+                            let rank =
+                                "👤";
+
+
+                            if (
+                                index ===
+                                0
+                            ) {
+                                rank =
+                                    "🥇";
+                            }
+
+
+                            if (
+                                index ===
+                                1
+                            ) {
+                                rank =
+                                    "🥈";
+                            }
+
+
+                            if (
+                                index ===
+                                2
+                            ) {
+                                rank =
+                                    "🥉";
+                            }
+
+
+                            return `
+                                <div class="leaderboard-row">
+
+                                    <div class="leaderboard-rank">
+                                        ${rank}
+                                    </div>
+
+                                    <div class="leaderboard-name">
+                                        <strong>
+                                            ${escapeHTML(player.name)}
+                                        </strong>
+                                    </div>
+
+                                    <div class="leaderboard-score">
+                                        ${Number(player.score || 0)}
+                                        POIN
+                                    </div>
+
+                                </div>
+                            `;
+
+                        }
+                    )
+                    .join("");
 
         }
 
@@ -1650,6 +1962,40 @@
                             "⚡ Room berubah:",
                             payload.new
                         );
+
+
+                        /*
+                         * GAME SELESAI
+                         */
+
+                        if (
+                            payload.new.status ===
+                            "finished"
+                        ) {
+
+                            gameFinished =
+                                true;
+
+
+                            lockBell();
+
+
+                            await showFinalLeaderboard();
+
+
+                            return;
+
+                        }
+
+
+                        /*
+                         * Jangan proses game
+                         * jika sudah selesai
+                         */
+
+                        if (gameFinished) {
+                            return;
+                        }
 
 
                         currentRound =
@@ -1718,15 +2064,12 @@
                     },
                     async function(payload) {
 
-                        console.log(
-                            "🔔 Bell realtime:",
-                            payload
-                        );
+                        if (
+                            gameFinished
+                        ) {
+                            return;
+                        }
 
-
-                        /*
-                         * Abaikan ronde lain
-                         */
 
                         if (
                             Number(
@@ -1801,15 +2144,12 @@
                     },
                     function(payload) {
 
-                        console.log(
-                            "💬 Answer realtime:",
-                            payload
-                        );
+                        if (
+                            gameFinished
+                        ) {
+                            return;
+                        }
 
-
-                        /*
-                         * Abaikan ronde lain
-                         */
 
                         if (
                             Number(
@@ -1822,11 +2162,6 @@
 
                         }
 
-
-                        /*
-                         * Pastikan jawaban milik
-                         * player ini
-                         */
 
                         if (
                             payload.new.player_id !==
@@ -1867,25 +2202,26 @@
 
         async function initializeGame() {
 
-            /*
-             * Kondisi awal
-             */
-
             lockBell();
 
             resetAnswerArea();
 
 
-            /*
-             * Ambil room
-             */
-
             await loadRoomGame();
 
 
             /*
-             * Aktifkan realtime
+             * Jika game sudah selesai,
+             * tidak perlu mengaktifkan
+             * kontrol game lagi.
              */
+
+            if (
+                gameFinished
+            ) {
+                return;
+            }
+
 
             listenForRoomChanges();
 
@@ -1901,7 +2237,6 @@
         // =====================================================
 
         initializeGame();
-
 
     </script>
 

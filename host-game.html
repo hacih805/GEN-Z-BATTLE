@@ -13,10 +13,12 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- =====================================================
-         FIX SCROLL MOBILE
-    ====================================================== -->
     <style>
+
+        /* =====================================================
+           FIX SCROLL MOBILE
+        ====================================================== */
+
         html {
             min-height: 100%;
             height: auto !important;
@@ -49,7 +51,8 @@
         }
 
         #answerPanel,
-        #scoreList {
+        #scoreList,
+        #finalLeaderboard {
             width: 100%;
             box-sizing: border-box;
         }
@@ -64,9 +67,98 @@
             max-width: 100%;
         }
 
+
+        /* =====================================================
+           FINAL LEADERBOARD
+        ====================================================== */
+
+        #finalPanel {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #finalWinner {
+            text-align: center;
+            padding: 25px 15px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.08);
+            margin-bottom: 20px;
+        }
+
+        #finalWinner .trophy {
+            font-size: 65px;
+            line-height: 1;
+        }
+
+        #finalWinnerName {
+            font-size: 28px;
+            margin-top: 12px;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+
+        #finalWinnerScore {
+            font-size: 18px;
+            opacity: 0.85;
+        }
+
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.06);
+            box-sizing: border-box;
+        }
+
+        .leaderboard-rank {
+            width: 42px;
+            min-width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            font-size: 21px;
+        }
+
+        .leaderboard-name {
+            flex: 1;
+            min-width: 0;
+            word-break: break-word;
+        }
+
+        .leaderboard-name strong {
+            font-size: 17px;
+        }
+
+        .leaderboard-score {
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        #backMenuButton {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ====================================================== */
+
         @media (max-width: 480px) {
+
             body {
-                padding: 12px 12px 50px 12px !important;
+                padding:
+                    12px
+                    12px
+                    50px
+                    12px !important;
             }
 
             .container {
@@ -80,9 +172,16 @@
             #gradingPanel button {
                 width: 100%;
             }
+
+            #finalWinnerName {
+                font-size: 25px;
+            }
+
         }
+
     </style>
 </head>
+
 
 <body>
 
@@ -128,253 +227,295 @@
 
 
         <!-- =====================================================
-             RONDE
+             GAME AREA
         ====================================================== -->
 
-        <div
-            class="waiting"
-            style="margin-top:20px;"
-        >
+        <div id="gameArea">
 
-            <small>
-                RONDE SEKARANG
-            </small>
-
-            <h2 id="roundDisplay">
-                Ronde 1 / 5
-            </h2>
-
-        </div>
-
-
-        <!-- =====================================================
-             PERTANYAAN
-        ====================================================== -->
-
-        <div
-            class="waiting"
-            style="margin-top:20px;"
-        >
-
-            <small>
-                ❓ PERTANYAAN
-            </small>
-
-            <textarea
-                id="questionInput"
-                placeholder="Tulis pertanyaan di sini..."
-                maxlength="300"
-                style="
-                    width:100%;
-                    min-height:120px;
-                    margin-top:15px;
-                    padding:15px;
-                    box-sizing:border-box;
-                    border-radius:15px;
-                    border:1px solid rgba(255,255,255,0.15);
-                    background:rgba(255,255,255,0.06);
-                    color:white;
-                    font-size:17px;
-                    resize:vertical;
-                    outline:none;
-                    font-family:inherit;
-                "
-            ></textarea>
-
-        </div>
-
-
-        <!-- =====================================================
-             MULAI RONDE
-        ====================================================== -->
-
-        <button
-            id="startRoundButton"
-            class="create-button"
-            onclick="startRound()"
-            style="margin-top:20px;"
-        >
-            🚀 MULAI RONDE
-        </button>
-
-
-        <!-- =====================================================
-             STATUS
-        ====================================================== -->
-
-        <div
-            class="waiting"
-            style="margin-top:20px;"
-        >
-
-            <h2 id="statusTitle">
-                ⏳ Menunggu Host
-            </h2>
-
-            <p id="statusText">
-                Tulis pertanyaan lalu tekan
-                "Mulai Ronde".
-            </p>
-
-        </div>
-
-
-        <!-- =====================================================
-             PEMENANG BELL
-        ====================================================== -->
-
-        <div
-            id="winnerPanel"
-            class="waiting"
-            style="
-                margin-top:20px;
-                display:none;
-            "
-        >
-
-            <small>
-                🔔 PEMENANG BELL
-            </small>
-
-            <h2
-                id="winnerName"
-                style="margin-top:10px;"
-            >
-                -
-            </h2>
-
-            <p id="winnerTime">
-                -
-            </p>
-
-        </div>
-
-
-        <!-- =====================================================
-             JAWABAN PLAYER
-        ====================================================== -->
-
-        <div
-            id="answerPanel"
-            class="waiting"
-            style="
-                margin-top:20px;
-                display:none;
-            "
-        >
-
-            <small>
-                💬 JAWABAN PLAYER
-            </small>
+            <!-- RONDE -->
 
             <div
-                id="answerText"
-                style="
-                    margin-top:15px;
-                    padding:15px;
-                    border-radius:15px;
-                    background:rgba(255,255,255,0.06);
-                    font-size:18px;
-                    line-height:1.5;
-                    word-break:break-word;
-                "
-            >
-                Menunggu jawaban...
-            </div>
-
-
-            <!-- =================================================
-                 PENILAIAN
-            ================================================== -->
-
-            <div
-                id="gradingPanel"
-                style="
-                    display:flex;
-                    gap:10px;
-                    margin-top:15px;
-                "
+                class="waiting"
+                style="margin-top:20px;"
             >
 
-                <button
-                    id="correctButton"
-                    class="create-button"
-                    onclick="markCorrect()"
-                    style="
-                        flex:1;
-                        margin:0;
-                    "
-                >
-                    ✅ BENAR +1
-                </button>
+                <small>
+                    RONDE SEKARANG
+                </small>
 
-                <button
-                    id="wrongButton"
-                    class="create-button"
-                    onclick="markWrong()"
-                    style="
-                        flex:1;
-                        margin:0;
-                    "
-                >
-                    ❌ SALAH
-                </button>
+                <h2 id="roundDisplay">
+                    Ronde 1 / 5
+                </h2>
 
             </div>
 
 
+            <!-- PERTANYAAN -->
+
             <div
-                id="gradingResult"
+                class="waiting"
+                style="margin-top:20px;"
+            >
+
+                <small>
+                    ❓ PERTANYAAN
+                </small>
+
+                <textarea
+                    id="questionInput"
+                    placeholder="Tulis pertanyaan di sini..."
+                    maxlength="300"
+                    style="
+                        width:100%;
+                        min-height:120px;
+                        margin-top:15px;
+                        padding:15px;
+                        box-sizing:border-box;
+                        border-radius:15px;
+                        border:1px solid rgba(255,255,255,0.15);
+                        background:rgba(255,255,255,0.06);
+                        color:white;
+                        font-size:17px;
+                        resize:vertical;
+                        outline:none;
+                        font-family:inherit;
+                    "
+                ></textarea>
+
+            </div>
+
+
+            <!-- MULAI RONDE -->
+
+            <button
+                id="startRoundButton"
+                class="create-button"
+                onclick="startRound()"
+                style="margin-top:20px;"
+            >
+                🚀 MULAI RONDE
+            </button>
+
+
+            <!-- STATUS -->
+
+            <div
+                class="waiting"
+                style="margin-top:20px;"
+            >
+
+                <h2 id="statusTitle">
+                    ⏳ Menunggu Host
+                </h2>
+
+                <p id="statusText">
+                    Tulis pertanyaan lalu tekan
+                    "Mulai Ronde".
+                </p>
+
+            </div>
+
+
+            <!-- PEMENANG BELL -->
+
+            <div
+                id="winnerPanel"
+                class="waiting"
                 style="
-                    margin-top:15px;
-                    font-weight:bold;
-                    text-align:center;
+                    margin-top:20px;
                     display:none;
                 "
-            ></div>
+            >
+
+                <small>
+                    🔔 PEMENANG BELL
+                </small>
+
+                <h2
+                    id="winnerName"
+                    style="margin-top:10px;"
+                >
+                    -
+                </h2>
+
+                <p id="winnerTime">
+                    -
+                </p>
+
+            </div>
+
+
+            <!-- JAWABAN PLAYER -->
+
+            <div
+                id="answerPanel"
+                class="waiting"
+                style="
+                    margin-top:20px;
+                    display:none;
+                "
+            >
+
+                <small>
+                    💬 JAWABAN PLAYER
+                </small>
+
+                <div
+                    id="answerText"
+                    style="
+                        margin-top:15px;
+                        padding:15px;
+                        border-radius:15px;
+                        background:rgba(255,255,255,0.06);
+                        font-size:18px;
+                        line-height:1.5;
+                        word-break:break-word;
+                    "
+                >
+                    Menunggu jawaban...
+                </div>
+
+
+                <div
+                    id="gradingPanel"
+                    style="
+                        display:flex;
+                        gap:10px;
+                        margin-top:15px;
+                    "
+                >
+
+                    <button
+                        id="correctButton"
+                        class="create-button"
+                        onclick="markCorrect()"
+                        style="
+                            flex:1;
+                            margin:0;
+                        "
+                    >
+                        ✅ BENAR +1
+                    </button>
+
+                    <button
+                        id="wrongButton"
+                        class="create-button"
+                        onclick="markWrong()"
+                        style="
+                            flex:1;
+                            margin:0;
+                        "
+                    >
+                        ❌ SALAH
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="gradingResult"
+                    style="
+                        margin-top:15px;
+                        font-weight:bold;
+                        text-align:center;
+                        display:none;
+                    "
+                ></div>
+
+            </div>
+
+
+            <!-- SCORE -->
+
+            <div
+                class="waiting"
+                style="margin-top:20px;"
+            >
+
+                <small>
+                    🏆 SCORE PLAYER
+                </small>
+
+                <div
+                    id="scoreList"
+                    style="margin-top:15px;"
+                >
+                    Memuat skor...
+                </div>
+
+            </div>
+
+
+            <!-- RONDE BERIKUTNYA -->
+
+            <button
+                id="nextRoundButton"
+                class="create-button"
+                onclick="nextRound()"
+                style="
+                    margin-top:20px;
+                    opacity:0.5;
+                "
+                disabled
+            >
+                ➡️ RONDE BERIKUTNYA
+            </button>
 
         </div>
 
 
         <!-- =====================================================
-             SCORE
+             FINAL LEADERBOARD
         ====================================================== -->
 
         <div
+            id="finalPanel"
             class="waiting"
-            style="margin-top:20px;"
         >
 
-            <small>
-                🏆 SCORE PLAYER
-            </small>
+            <div id="finalWinner">
 
-            <div
-                id="scoreList"
-                style="margin-top:15px;"
-            >
-                Memuat skor...
+                <div class="trophy">
+                    🏆
+                </div>
+
+                <small>
+                    🎉 PEMENANG GEN Z BATTLE
+                </small>
+
+                <h2 id="finalWinnerName">
+                    -
+                </h2>
+
+                <div id="finalWinnerScore">
+                    0 POIN
+                </div>
+
             </div>
 
+
+            <small>
+                🏆 HASIL AKHIR
+            </small>
+
+
+            <div
+                id="finalLeaderboard"
+                style="margin-top:15px;"
+            >
+                Memuat hasil...
+            </div>
+
+
+            <button
+                id="backMenuButton"
+                class="create-button"
+                onclick="window.location.href='index.html'"
+            >
+                🏠 KEMBALI KE MENU
+            </button>
+
         </div>
-
-
-        <!-- =====================================================
-             RONDE BERIKUTNYA
-        ====================================================== -->
-
-        <button
-            id="nextRoundButton"
-            class="create-button"
-            onclick="nextRound()"
-            style="
-                margin-top:20px;
-                opacity:0.5;
-            "
-            disabled
-        >
-            ➡️ RONDE BERIKUTNYA
-        </button>
 
 
         <p class="version">
@@ -384,9 +525,9 @@
     </main>
 
 
-    <!-- =========================================================
+    <!-- =====================================================
          SUPABASE
-    ========================================================== -->
+    ====================================================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -417,6 +558,7 @@
             Number(
                 localStorage.getItem("genz_total_rounds")
             ) || 5;
+
 
         if (totalRounds < 1) {
             totalRounds = 1;
@@ -482,6 +624,21 @@
         const scoreList =
             document.getElementById("scoreList");
 
+        const gameArea =
+            document.getElementById("gameArea");
+
+        const finalPanel =
+            document.getElementById("finalPanel");
+
+        const finalWinnerName =
+            document.getElementById("finalWinnerName");
+
+        const finalWinnerScore =
+            document.getElementById("finalWinnerScore");
+
+        const finalLeaderboard =
+            document.getElementById("finalLeaderboard");
+
 
         // =====================================================
         // STATE
@@ -505,7 +662,7 @@
 
 
         // =====================================================
-        // TAMPILKAN DATA ROOM
+        // DATA ROOM
         // =====================================================
 
         roomCodeElement.textContent =
@@ -603,7 +760,8 @@
 
         if (!roomId) {
 
-            startRoundButton.disabled = true;
+            startRoundButton.disabled =
+                true;
 
             statusTitle.textContent =
                 "❌ Room tidak ditemukan";
@@ -623,6 +781,7 @@
             if (!roomId) {
                 return;
             }
+
 
             const {
                 data: room,
@@ -644,6 +803,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -665,7 +825,8 @@
 
 
             currentRound =
-                Number(room.round_number) || 1;
+                Number(room.round_number) ||
+                1;
 
 
             updateRoundDisplay();
@@ -675,17 +836,7 @@
 
                 gameFinished = true;
 
-                startRoundButton.disabled = true;
-                nextRoundButton.disabled = true;
-
-                startRoundButton.style.opacity = "0.5";
-                nextRoundButton.style.opacity = "0.5";
-
-                statusTitle.textContent =
-                    "🏁 GAME SELESAI";
-
-                statusText.textContent =
-                    "Semua ronde telah selesai.";
+                await showFinalLeaderboard();
 
                 return;
 
@@ -705,9 +856,11 @@
                 statusText.textContent =
                     "Pertanyaan sedang dimainkan.";
 
-                startRoundButton.disabled = true;
+                startRoundButton.disabled =
+                    true;
 
-                startRoundButton.style.opacity = "0.5";
+                startRoundButton.style.opacity =
+                    "0.5";
 
                 enableNextRound();
 
@@ -732,7 +885,10 @@
             }
 
 
-            if (currentRound > totalRounds) {
+            if (
+                currentRound >
+                totalRounds
+            ) {
 
                 alert(
                     "🏁 Semua ronde sudah selesai."
@@ -760,8 +916,11 @@
             }
 
 
-            startRoundButton.disabled = true;
-            startRoundButton.style.opacity = "0.5";
+            startRoundButton.disabled =
+                true;
+
+            startRoundButton.style.opacity =
+                "0.5";
 
 
             try {
@@ -817,7 +976,9 @@
                 );
 
 
-                roundStarted = true;
+                roundStarted =
+                    true;
+
 
                 resetRoundPanels();
 
@@ -859,7 +1020,7 @@
 
 
         // =====================================================
-        // AKTIFKAN NEXT ROUND
+        // NEXT ROUND
         // =====================================================
 
         function enableNextRound() {
@@ -869,12 +1030,17 @@
             }
 
 
-            nextRoundButton.disabled = false;
+            nextRoundButton.disabled =
+                false;
 
-            nextRoundButton.style.opacity = "1";
+            nextRoundButton.style.opacity =
+                "1";
 
 
-            if (currentRound >= totalRounds) {
+            if (
+                currentRound >=
+                totalRounds
+            ) {
 
                 nextRoundButton.textContent =
                     "🏁 SELESAIKAN GAME";
@@ -936,7 +1102,7 @@
 
 
         // =====================================================
-        // TAMPILKAN PEMENANG
+        // PEMENANG BELL
         // =====================================================
 
         async function showWinner(bell) {
@@ -981,12 +1147,15 @@
 
 
             winnerName.textContent =
-                "🔔 " + player.name;
+                "🔔 " +
+                player.name;
 
 
             winnerTime.textContent =
                 "Menekan Bell pada " +
-                formatTime(bell.pressed_at);
+                formatTime(
+                    bell.pressed_at
+                );
 
 
             statusTitle.textContent =
@@ -1004,7 +1173,7 @@
 
 
         // =====================================================
-        // LOAD JAWABAN PEMENANG
+        // LOAD JAWABAN
         // =====================================================
 
         async function loadWinnerAnswer() {
@@ -1119,10 +1288,15 @@
             }
 
 
-            gradingDone = true;
+            gradingDone =
+                true;
 
-            correctButton.disabled = true;
-            wrongButton.disabled = true;
+
+            correctButton.disabled =
+                true;
+
+            wrongButton.disabled =
+                true;
 
 
             try {
@@ -1143,7 +1317,9 @@
 
 
                 const newScore =
-                    Number(player.score || 0) + 1;
+                    Number(
+                        player.score || 0
+                    ) + 1;
 
 
                 const {
@@ -1153,7 +1329,10 @@
                     .update({
                         score: newScore
                     })
-                    .eq("id", currentWinnerId);
+                    .eq(
+                        "id",
+                        currentWinnerId
+                    );
 
 
                 if (updateError) {
@@ -1195,10 +1374,15 @@
                 );
 
 
-                gradingDone = false;
+                gradingDone =
+                    false;
 
-                correctButton.disabled = false;
-                wrongButton.disabled = false;
+
+                correctButton.disabled =
+                    false;
+
+                wrongButton.disabled =
+                    false;
 
             }
 
@@ -1220,10 +1404,15 @@
             }
 
 
-            gradingDone = true;
+            gradingDone =
+                true;
 
-            correctButton.disabled = true;
-            wrongButton.disabled = true;
+
+            correctButton.disabled =
+                true;
+
+            wrongButton.disabled =
+                true;
 
 
             gradingResult.style.display =
@@ -1261,8 +1450,13 @@
                 error
             } = await sb
                 .from("players")
-                .select("id, name, score")
-                .eq("room_id", roomId)
+                .select(
+                    "id, name, score"
+                )
+                .eq(
+                    "room_id",
+                    roomId
+                )
                 .order(
                     "score",
                     {
@@ -1313,6 +1507,7 @@
                                         background:rgba(255,255,255,0.06);
                                     "
                                 >
+
                                     <div>
                                         <strong>
                                             ${index + 1}.
@@ -1326,6 +1521,143 @@
                                             ${Number(player.score || 0)}
                                         </strong>
                                     </div>
+
+                                </div>
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+        }
+
+
+        // =====================================================
+        // FINAL LEADERBOARD
+        // =====================================================
+
+        async function showFinalLeaderboard() {
+
+            gameFinished =
+                true;
+
+
+            const {
+                data: players,
+                error
+            } = await sb
+                .from("players")
+                .select(
+                    "id, name, score"
+                )
+                .eq(
+                    "room_id",
+                    roomId
+                )
+                .order(
+                    "score",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+            if (error) {
+
+                console.error(
+                    "❌ Gagal mengambil leaderboard:",
+                    error
+                );
+
+                finalLeaderboard.innerHTML =
+                    "❌ Gagal mengambil hasil akhir.";
+
+                return;
+
+            }
+
+
+            gameArea.style.display =
+                "none";
+
+
+            finalPanel.style.display =
+                "block";
+
+
+            if (
+                !players ||
+                players.length === 0
+            ) {
+
+                finalWinnerName.textContent =
+                    "Belum ada Player";
+
+                finalWinnerScore.textContent =
+                    "0 POIN";
+
+                finalLeaderboard.innerHTML =
+                    "Tidak ada data Player.";
+
+                return;
+
+            }
+
+
+            const winner =
+                players[0];
+
+
+            finalWinnerName.textContent =
+                winner.name;
+
+
+            finalWinnerScore.textContent =
+                Number(
+                    winner.score || 0
+                ) +
+                " POIN";
+
+
+            finalLeaderboard.innerHTML =
+                players
+                    .map(
+                        (player, index) => {
+
+                            let rank =
+                                "👤";
+
+                            if (index === 0) {
+                                rank = "🥇";
+                            }
+
+                            if (index === 1) {
+                                rank = "🥈";
+                            }
+
+                            if (index === 2) {
+                                rank = "🥉";
+                            }
+
+
+                            return `
+                                <div class="leaderboard-row">
+
+                                    <div class="leaderboard-rank">
+                                        ${rank}
+                                    </div>
+
+                                    <div class="leaderboard-name">
+                                        <strong>
+                                            ${escapeHTML(player.name)}
+                                        </strong>
+                                    </div>
+
+                                    <div class="leaderboard-score">
+                                        ${Number(player.score || 0)}
+                                        POIN
+                                    </div>
+
                                 </div>
                             `;
 
@@ -1342,15 +1674,20 @@
 
         function resetRoundPanels() {
 
-            currentWinnerId = null;
+            currentWinnerId =
+                null;
 
-            currentWinnerName = null;
+            currentWinnerName =
+                null;
 
-            currentAnswerId = null;
+            currentAnswerId =
+                null;
 
-            answerReceived = false;
+            answerReceived =
+                false;
 
-            gradingDone = false;
+            gradingDone =
+                false;
 
 
             winnerPanel.style.display =
@@ -1406,7 +1743,7 @@
             const confirmFinish =
                 confirm(
                     "🏁 Yakin ingin menyelesaikan game?\n\n" +
-                    "Setelah game selesai, ronde baru tidak dapat dimulai."
+                    "Setelah game selesai, leaderboard akan ditampilkan."
                 );
 
 
@@ -1424,7 +1761,10 @@
                     .update({
                         status: "finished"
                     })
-                    .eq("id", roomId);
+                    .eq(
+                        "id",
+                        roomId
+                    );
 
 
                 if (error) {
@@ -1444,29 +1784,11 @@
                 }
 
 
-                gameFinished = true;
+                gameFinished =
+                    true;
 
 
-                startRoundButton.disabled = true;
-                nextRoundButton.disabled = true;
-
-                startRoundButton.style.opacity = "0.5";
-                nextRoundButton.style.opacity = "0.5";
-
-
-                statusTitle.textContent =
-                    "🏁 GAME SELESAI!";
-
-
-                statusText.textContent =
-                    "Semua ronde telah selesai. Lihat skor akhir.";
-
-
-                nextRoundButton.textContent =
-                    "🏁 GAME SELESAI";
-
-
-                await loadScores();
+                await showFinalLeaderboard();
 
 
             } catch (error) {
@@ -1475,6 +1797,7 @@
                     "❌ Error:",
                     error
                 );
+
 
                 alert(
                     "❌ Terjadi kesalahan.\n\n" +
@@ -1500,7 +1823,10 @@
             }
 
 
-            if (currentRound >= totalRounds) {
+            if (
+                currentRound >=
+                totalRounds
+            ) {
 
                 await finishGame();
 
@@ -1531,7 +1857,10 @@
                             "playing"
 
                     })
-                    .eq("id", roomId);
+                    .eq(
+                        "id",
+                        roomId
+                    );
 
 
                 if (error) {
@@ -1553,6 +1882,7 @@
 
                 currentRound =
                     nextRoundNumber;
+
 
                 roundStarted =
                     false;
@@ -1626,7 +1956,10 @@
 
 
             sb
-                .channel("host-bell-" + roomId)
+                .channel(
+                    "host-bell-" +
+                    roomId
+                )
                 .on(
                     "postgres_changes",
                     {
@@ -1639,16 +1972,11 @@
                     },
                     async payload => {
 
-                        console.log(
-                            "🔔 Bell realtime:",
-                            payload.new
-                        );
-
-
                         if (
                             Number(
                                 payload.new.round_number
-                            ) !== currentRound
+                            ) !==
+                            currentRound
                         ) {
                             return;
                         }
@@ -1682,7 +2010,10 @@
 
 
             sb
-                .channel("host-answers-" + roomId)
+                .channel(
+                    "host-answers-" +
+                    roomId
+                )
                 .on(
                     "postgres_changes",
                     {
@@ -1695,16 +2026,11 @@
                     },
                     payload => {
 
-                        console.log(
-                            "💬 Answer realtime:",
-                            payload.new
-                        );
-
-
                         if (
                             Number(
                                 payload.new.round_number
-                            ) !== currentRound
+                            ) !==
+                            currentRound
                         ) {
                             return;
                         }
@@ -1730,7 +2056,7 @@
 
 
         // =====================================================
-        // REALTIME PLAYERS / SCORE
+        // REALTIME PLAYERS
         // =====================================================
 
         function listenForPlayers() {
@@ -1741,7 +2067,10 @@
 
 
             sb
-                .channel("host-players-" + roomId)
+                .channel(
+                    "host-players-" +
+                    roomId
+                )
                 .on(
                     "postgres_changes",
                     {
@@ -1754,13 +2083,16 @@
                     },
                     payload => {
 
-                        console.log(
-                            "👤 Player berubah:",
-                            payload
-                        );
-
-
                         loadScores();
+
+                        /*
+                         * Jika game sudah selesai,
+                         * update leaderboard juga.
+                         */
+
+                        if (gameFinished) {
+                            showFinalLeaderboard();
+                        }
 
                     }
                 )
@@ -1781,7 +2113,10 @@
 
 
             sb
-                .channel("host-room-" + roomId)
+                .channel(
+                    "host-room-" +
+                    roomId
+                )
                 .on(
                     "postgres_changes",
                     {
@@ -1792,13 +2127,7 @@
                             "id=eq." +
                             roomId
                     },
-                    payload => {
-
-                        console.log(
-                            "🏠 Room berubah:",
-                            payload.new
-                        );
-
+                    async payload => {
 
                         const room =
                             payload.new;
@@ -1812,7 +2141,8 @@
                             totalRounds =
                                 Number(
                                     room.total_rounds
-                                ) || totalRounds;
+                                ) ||
+                                totalRounds;
 
                         }
 
@@ -1820,7 +2150,8 @@
                         const updatedRound =
                             Number(
                                 room.round_number
-                            ) || 1;
+                            ) ||
+                            1;
 
 
                         if (
@@ -1836,6 +2167,10 @@
                         }
 
 
+                        /*
+                         * GAME SELESAI
+                         */
+
                         if (
                             room.status ===
                             "finished"
@@ -1845,26 +2180,7 @@
                                 true;
 
 
-                            startRoundButton.disabled =
-                                true;
-
-                            nextRoundButton.disabled =
-                                true;
-
-
-                            startRoundButton.style.opacity =
-                                "0.5";
-
-                            nextRoundButton.style.opacity =
-                                "0.5";
-
-
-                            statusTitle.textContent =
-                                "🏁 GAME SELESAI";
-
-
-                            statusText.textContent =
-                                "Semua ronde telah selesai.";
+                            await showFinalLeaderboard();
 
 
                             return;
@@ -1889,7 +2205,7 @@
 
 
         // =====================================================
-        // MULAI
+        // INIT
         // =====================================================
 
         async function init() {
@@ -1903,9 +2219,22 @@
 
             updateRoundDisplay();
 
+
             await loadRoom();
 
+
+            /*
+             * Kalau game sudah selesai,
+             * loadRoom() sudah menampilkan leaderboard.
+             */
+
+            if (gameFinished) {
+                return;
+            }
+
+
             await loadScores();
+
 
             listenForBell();
 
