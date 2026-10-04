@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Game - GEN Z BATTLE</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <main class="container">
+
+        <div class="badge">
+            🔥 GAME STARTED
+        </div>
+
+
+        <h1>
+            GEN Z<br>
+            <span>BATTLE</span>
+        </h1>
+
+
+        <div class="waiting">
+
+            <h2>
+                🚀 GAME DIMULAI!
+            </h2>
+
+            <p>
+                Bersiap untuk pertanyaan pertama.
+            </p>
+
+        </div>
+
+
+        <div class="room-info">
+
+            <div>
+
+                <span>
+                    👤 Player
+                </span>
+
+                <strong id="playerName">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    🔑 Room
+                </span>
+
+                <strong id="roomCode">
+                    ------
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <p class="version">
+            GEN Z BATTLE • V0.3
+        </p>
+
+    </main>
+
+
+    <script>
+
+        const playerName =
+            localStorage.getItem(
+                "genz_player_name"
+            );
+
+
+        const roomCode =
+            localStorage.getItem(
+                "genz_room"
+            );
+
+
+        document.getElementById(
+            "playerName"
+        ).textContent =
+            playerName || "Host";
+
+
+        document.getElementById(
+            "roomCode"
+        ).textContent =
+            roomCode || "------";
+
+    </script>
+
+</body>
+
+</html>

@@ -1,3 +1,7 @@
+// ========================================
+// NAVIGATION
+// ========================================
+
 function openHost() {
     window.location.href = "host.html";
 }
@@ -70,6 +74,7 @@ async function generateRoom() {
 
 
     // Membuat kode room 6 karakter
+
     const characters =
         "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -89,6 +94,7 @@ async function generateRoom() {
     try {
 
         // Simpan room ke Supabase
+
         const { data, error } =
             await sb
                 .from("rooms")
@@ -105,7 +111,6 @@ async function generateRoom() {
                 .single();
 
 
-        // Jika terjadi error
         if (error) {
 
             console.error(error);
@@ -120,6 +125,7 @@ async function generateRoom() {
 
 
         // Simpan data room di HP Host
+
         localStorage.setItem(
             "genz_host",
             hostName
@@ -146,7 +152,8 @@ async function generateRoom() {
         );
 
 
-        // Masuk ke halaman room
+        // Masuk ke room
+
         window.location.href =
             "room.html";
 
@@ -243,15 +250,61 @@ function loadRoomData() {
 
 
 // ========================================
-// START GAME
+// START GAME - SUPABASE
 // ========================================
 
-function startGame() {
+async function startGame() {
 
-    alert(
-        "🚀 GAME SIAP!\n\n" +
-        "Sistem permainan akan kita bangun pada tahap berikutnya."
-    );
+    const roomId =
+        localStorage.getItem("genz_room_id");
+
+
+    if (!roomId) {
+
+        alert(
+            "❌ Room ID tidak ditemukan."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const { error } =
+            await sb
+                .from("rooms")
+                .update({
+                    status: "playing"
+                })
+                .eq("id", roomId);
+
+
+        if (error) {
+
+            console.error(error);
+
+            alert(
+                "❌ Gagal memulai game.\n\n" +
+                error.message
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "🚀 Game berhasil dimulai!"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Terjadi kesalahan saat memulai game."
+        );
+    }
 }
 
 
