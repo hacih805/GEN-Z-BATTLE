@@ -2,7 +2,6 @@
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -12,86 +11,148 @@
 
     <title>Game - GEN Z BATTLE</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
     <main class="container">
 
+        <!-- HEADER -->
         <div class="badge">
-            🔥 GAME STARTED
+            🔥 GEN Z BATTLE
         </div>
 
-
         <h1>
-            GEN Z<br>
+            BELL<br>
             <span>BATTLE</span>
         </h1>
 
+        <!-- ROOM INFO -->
+        <div class="room-info">
 
-        <div class="waiting">
+            <div>
+                <span>👤 Player</span>
+                <strong id="playerName">-</strong>
+            </div>
 
-            <h2>
-                🚀 GAME DIMULAI!
+            <div>
+                <span>🔑 Room</span>
+                <strong id="roomCode">------</strong>
+            </div>
+
+        </div>
+
+
+        <!-- QUESTION -->
+        <div
+            class="waiting"
+            style="margin-top:20px;"
+        >
+
+            <small>
+                PERTANYAAN
+            </small>
+
+            <h2 id="questionText">
+                Bersiap...
             </h2>
 
+        </div>
+
+
+        <!-- BELL -->
+        <div
+            style="
+                margin-top:25px;
+                text-align:center;
+            "
+        >
+
+            <p
+                id="bellStatus"
+                style="
+                    margin-bottom:15px;
+                    opacity:0.8;
+                "
+            >
+                🔔 Bell siap!
+            </p>
+
+
+            <button
+                id="bellButton"
+                onclick="pressBell()"
+                style="
+                    width:180px;
+                    height:180px;
+                    border-radius:50%;
+                    border:none;
+                    font-size:60px;
+                    cursor:pointer;
+                    background:linear-gradient(
+                        145deg,
+                        #ffcc00,
+                        #ff8c00
+                    );
+                    box-shadow:
+                        0 10px 30px
+                        rgba(255,140,0,0.4);
+                "
+            >
+                🔔
+            </button>
+
+
+            <h2
+                id="winnerText"
+                style="
+                    margin-top:20px;
+                "
+            >
+                Tekan bell jika tahu jawabannya!
+            </h2>
+
+        </div>
+
+
+        <!-- SCORE -->
+        <div
+            class="waiting"
+            style="margin-top:25px;"
+        >
+
+            <h2>🏆 Skor</h2>
+
             <p>
-                Bersiap untuk pertanyaan pertama.
+                Sistem skor akan muncul di sini.
             </p>
 
         </div>
 
 
-        <div class="room-info">
-
-            <div>
-
-                <span>
-                    👤 Player
-                </span>
-
-                <strong id="playerName">
-                    -
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    🔑 Room
-                </span>
-
-                <strong id="roomCode">
-                    ------
-                </strong>
-
-            </div>
-
-        </div>
-
-
         <p class="version">
-            GEN Z BATTLE • V0.3
+            GEN Z BATTLE • BELL BATTLE
         </p>
 
     </main>
 
 
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase-config.js"></script>
+
     <script>
+
+        // =========================
+        // DATA PLAYER
+        // =========================
 
         const playerName =
             localStorage.getItem(
                 "genz_player_name"
             );
-
 
         const roomCode =
             localStorage.getItem(
@@ -109,6 +170,67 @@
             "roomCode"
         ).textContent =
             roomCode || "------";
+
+
+        // =========================
+        // BELL
+        // =========================
+
+        let bellPressed = false;
+
+
+        function pressBell() {
+
+            // Jika sudah menekan
+            if (bellPressed) {
+                return;
+            }
+
+
+            bellPressed = true;
+
+
+            const button =
+                document.getElementById(
+                    "bellButton"
+                );
+
+
+            const status =
+                document.getElementById(
+                    "bellStatus"
+                );
+
+
+            const winner =
+                document.getElementById(
+                    "winnerText"
+                );
+
+
+            // Matikan tombol
+            button.disabled = true;
+
+
+            button.style.opacity = "0.4";
+
+            button.style.cursor =
+                "not-allowed";
+
+
+            status.textContent =
+                "🔒 Bell kamu sudah ditekan!";
+
+
+            winner.textContent =
+                "🏆 Kamu menekan bell!";
+
+
+            console.log(
+                "🔔 Bell ditekan oleh:",
+                playerName || "Host"
+            );
+        }
 
     </script>
 
