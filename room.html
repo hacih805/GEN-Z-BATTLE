@@ -2,7 +2,6 @@
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -12,35 +11,25 @@
 
     <title>Room - GEN Z BATTLE</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
     <main class="container">
 
-        <!-- =====================================
-             HEADER
-        ====================================== -->
+        <!-- HEADER -->
 
         <div class="badge">
             🔥 ROOM READY
         </div>
-
 
         <p class="subtitle">
             Bagikan kode ini kepada peserta
         </p>
 
 
-        <!-- =====================================
-             KODE ROOM
-        ====================================== -->
+        <!-- ROOM CODE -->
 
         <div class="room-code-box">
 
@@ -55,30 +44,19 @@
         </div>
 
 
-        <!-- =====================================
-             INFORMASI ROOM
-        ====================================== -->
+        <!-- ROOM INFO -->
 
         <div class="room-info">
 
             <div>
-
-                <span>
-                    👑 Host
-                </span>
-
+                <span>👑 Host</span>
                 <strong id="hostDisplay">
                     -
                 </strong>
-
             </div>
 
-
             <div>
-
-                <span>
-                    👥 Kapasitas
-                </span>
+                <span>👥 Kapasitas</span>
 
                 <strong>
 
@@ -92,25 +70,18 @@
 
             </div>
 
-
             <div>
-
-                <span>
-                    🎯 Kategori
-                </span>
+                <span>🎯 Kategori</span>
 
                 <strong id="categoryDisplay">
                     Random
                 </strong>
-
             </div>
 
         </div>
 
 
-        <!-- =====================================
-             DAFTAR PEMAIN
-        ====================================== -->
+        <!-- PLAYER LIST -->
 
         <div
             class="waiting"
@@ -151,9 +122,7 @@
         </div>
 
 
-        <!-- =====================================
-             STATUS ROOM
-        ====================================== -->
+        <!-- WAITING -->
 
         <div class="waiting">
 
@@ -161,11 +130,9 @@
                 ●
             </div>
 
-
             <h2>
                 Menunggu pemain...
             </h2>
-
 
             <p>
                 Peserta dapat bergabung menggunakan
@@ -175,60 +142,47 @@
         </div>
 
 
-        <!-- =====================================
-             MULAI GAME
-        ====================================== -->
+        <!-- START GAME -->
 
         <button
             class="create-button"
+            id="startGameButton"
             onclick="startGame()"
         >
-
             🚀 MULAI GAME
-
         </button>
 
 
         <p class="version">
-            GEN Z BATTLE • V0.3
+            GEN Z BATTLE • V0.4
         </p>
 
     </main>
 
 
-    <!-- =========================================
-         SUPABASE
-    ========================================== -->
+    <!-- SUPABASE -->
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    ></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script src="supabase-config.js"></script>
-
 
     <script src="script.js"></script>
 
 
-    <!-- =========================================
-         ROOM SYSTEM
-    ========================================== -->
-
     <script>
 
-        // ========================================
-        // GLOBAL ROOM DATA
-        // ========================================
+        // =====================================================
+        // ROOM DATA
+        // =====================================================
 
         let roomId = null;
 
         let roomMaxPlayers = 6;
 
 
-        // ========================================
+        // =====================================================
         // SETUP ROOM
-        // ========================================
+        // =====================================================
 
         async function setupRoom() {
 
@@ -237,24 +191,20 @@
                     "genz_room"
                 );
 
-
             const hostName =
                 localStorage.getItem(
                     "genz_host"
                 );
-
 
             roomId =
                 localStorage.getItem(
                     "genz_room_id"
                 );
 
-
             const maxPlayers =
                 localStorage.getItem(
                     "genz_players"
                 );
-
 
             const category =
                 localStorage.getItem(
@@ -262,55 +212,56 @@
                 );
 
 
-            // ====================================
-            // TAMPILKAN ROOM CODE
-            // ====================================
+            // -------------------------------------------------
+            // ROOM CODE
+            // -------------------------------------------------
 
             const roomCodeElement =
                 document.getElementById(
                     "roomCode"
                 );
 
-
             if (roomCodeElement) {
 
                 roomCodeElement.textContent =
-                    roomCode || "------";
+                    roomCode ||
+                    "------";
 
             }
 
 
-            // ====================================
-            // TAMPILKAN HOST
-            // ====================================
+            // -------------------------------------------------
+            // HOST
+            // -------------------------------------------------
 
             const hostElement =
                 document.getElementById(
                     "hostDisplay"
                 );
 
-
             if (hostElement) {
 
                 hostElement.textContent =
-                    hostName || "-";
+                    hostName ||
+                    "-";
 
             }
 
 
-            // ====================================
-            // TAMPILKAN KAPASITAS
-            // ====================================
+            // -------------------------------------------------
+            // MAX PLAYERS
+            // -------------------------------------------------
 
             roomMaxPlayers =
-                Number(maxPlayers) || 6;
+                Number(
+                    maxPlayers
+                ) || 6;
 
 
             const maxPlayersElement =
                 document.getElementById(
                     "maxPlayers"
                 );
-
 
             if (maxPlayersElement) {
 
@@ -320,9 +271,9 @@
             }
 
 
-            // ====================================
-            // TAMPILKAN KATEGORI
-            // ====================================
+            // -------------------------------------------------
+            // CATEGORY
+            // -------------------------------------------------
 
             const categoryNames = {
 
@@ -356,9 +307,9 @@
             }
 
 
-            // ====================================
-            // CEK ROOM ID
-            // ====================================
+            // -------------------------------------------------
+            // ROOM ID
+            // -------------------------------------------------
 
             if (!roomId) {
 
@@ -367,36 +318,35 @@
                 );
 
                 return;
-
             }
 
 
-            // ====================================
-            // LOAD PLAYER AWAL
-            // ====================================
+            // -------------------------------------------------
+            // LOAD PLAYERS
+            // -------------------------------------------------
 
             await loadPlayers();
 
 
-            // ====================================
-            // AKTIFKAN REALTIME PLAYER
-            // ====================================
+            // -------------------------------------------------
+            // REALTIME PLAYERS
+            // -------------------------------------------------
 
             listenForPlayers();
 
 
-            // ====================================
-            // AKTIFKAN REALTIME STATUS ROOM
-            // ====================================
+            // -------------------------------------------------
+            // REALTIME ROOM STATUS
+            // -------------------------------------------------
 
             listenForRoomStatus();
 
         }
 
 
-        // ========================================
+        // =====================================================
         // LOAD PLAYERS
-        // ========================================
+        // =====================================================
 
         async function loadPlayers() {
 
@@ -409,16 +359,12 @@
                 data: players,
                 error
             } = await sb
-
                 .from("players")
-
                 .select("*")
-
                 .eq(
                     "room_id",
                     roomId
                 )
-
                 .order(
                     "joined_at",
                     {
@@ -435,7 +381,6 @@
                 );
 
                 return;
-
             }
 
 
@@ -446,9 +391,9 @@
         }
 
 
-        // ========================================
-        // RENDER PLAYERS
-        // ========================================
+        // =====================================================
+        // RENDER PLAYER
+        // =====================================================
 
         function renderPlayers(
             players
@@ -459,35 +404,41 @@
                     "playersList"
                 );
 
-
             const countDisplay =
                 document.getElementById(
                     "playerCountDisplay"
                 );
 
 
-            if (!list || !countDisplay) {
+            if (
+                !list ||
+                !countDisplay
+            ) {
+
                 return;
+
             }
 
 
-            // Jumlah player
-
             countDisplay.textContent =
-                `(${players.length}/${roomMaxPlayers})`;
+                "(" +
+                players.length +
+                "/" +
+                roomMaxPlayers +
+                ")";
 
 
-            // Tidak ada player
+            // -------------------------------------------------
+            // BELUM ADA PLAYER
+            // -------------------------------------------------
 
             if (
-                players.length ===
-                0
+                players.length === 0
             ) {
 
                 list.innerHTML = `
 
                     <p
-                        id="noPlayers"
                         style="
                             text-align:center;
                             opacity:0.7;
@@ -499,16 +450,15 @@
                 `;
 
                 return;
-
             }
 
 
-            // Bersihkan list
+            // -------------------------------------------------
+            // RENDER
+            // -------------------------------------------------
 
             list.innerHTML = "";
 
-
-            // Tampilkan player
 
             players.forEach(
                 function(
@@ -566,7 +516,6 @@
                             🟢
                         </span>
 
-
                         <div>
 
                             <strong>
@@ -575,14 +524,14 @@
                                 )}
                             </strong>
 
-
                             <small
                                 style="
                                     display:block;
                                     opacity:0.6;
                                 "
                             >
-                                Player ${index + 1}
+                                Player
+                                ${index + 1}
                             </small>
 
                         </div>
@@ -600,9 +549,9 @@
         }
 
 
-        // ========================================
-        // REALTIME PLAYER
-        // ========================================
+        // =====================================================
+        // REALTIME PLAYERS
+        // =====================================================
 
         function listenForPlayers() {
 
@@ -612,32 +561,20 @@
 
 
             sb
-
                 .channel(
                     "room-players-" +
                     roomId
                 )
-
-
                 .on(
-
                     "postgres_changes",
-
                     {
-
                         event: "*",
-
                         schema: "public",
-
                         table: "players",
-
                         filter:
                             "room_id=eq." +
                             roomId
-
                     },
-
-
                     function(payload) {
 
                         console.log(
@@ -649,12 +586,8 @@
                         loadPlayers();
 
                     }
-
                 )
-
-
                 .subscribe(
-
                     function(status) {
 
                         console.log(
@@ -663,15 +596,14 @@
                         );
 
                     }
-
                 );
 
         }
 
 
-        // ========================================
-        // REALTIME STATUS ROOM
-        // ========================================
+        // =====================================================
+        // REALTIME ROOM STATUS
+        // =====================================================
 
         function listenForRoomStatus() {
 
@@ -682,37 +614,24 @@
                 );
 
                 return;
-
             }
 
 
             sb
-
                 .channel(
                     "room-status-" +
                     roomId
                 )
-
-
                 .on(
-
                     "postgres_changes",
-
                     {
-
                         event: "UPDATE",
-
                         schema: "public",
-
                         table: "rooms",
-
                         filter:
                             "id=eq." +
                             roomId
-
                     },
-
-
                     function(payload) {
 
                         console.log(
@@ -721,25 +640,45 @@
                         );
 
 
-                        // Game dimulai
-
                         if (
                             payload.new.status ===
                             "playing"
                         ) {
 
-                            window.location.href =
-                                "game.html";
+                            /*
+                             * HOST
+                             * → host-game.html
+                             *
+                             * PLAYER
+                             * → game.html
+                             */
+
+                            const isHost =
+                                localStorage.getItem(
+                                    "genz_host"
+                                ) &&
+                                !localStorage.getItem(
+                                    "genz_player_id"
+                                );
+
+
+                            if (isHost) {
+
+                                window.location.href =
+                                    "host-game.html";
+
+                            } else {
+
+                                window.location.href =
+                                    "game.html";
+
+                            }
 
                         }
 
                     }
-
                 )
-
-
                 .subscribe(
-
                     function(status) {
 
                         console.log(
@@ -748,15 +687,87 @@
                         );
 
                     }
-
                 );
 
         }
 
 
-        // ========================================
+        // =====================================================
+        // START GAME
+        // =====================================================
+
+        async function startGame() {
+
+            if (!roomId) {
+
+                alert(
+                    "❌ Room ID tidak ditemukan."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const {
+                    error
+                } = await sb
+                    .from("rooms")
+                    .update({
+                        status:
+                            "playing"
+                    })
+                    .eq(
+                        "id",
+                        roomId
+                    );
+
+
+                if (error) {
+
+                    console.error(
+                        "❌ Gagal memulai game:",
+                        error
+                    );
+
+                    alert(
+                        "❌ Gagal memulai game.\n\n" +
+                        error.message
+                    );
+
+                    return;
+                }
+
+
+                /*
+                 * Redirect Host sendiri.
+                 */
+
+                window.location.href =
+                    "host-game.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error:",
+                    error
+                );
+
+                alert(
+                    "❌ Terjadi kesalahan.\n\n" +
+                    error.message
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
         // ESCAPE HTML
-        // ========================================
+        // =====================================================
 
         function escapeHTML(
             text
@@ -767,19 +778,17 @@
                     "div"
                 );
 
-
             div.textContent =
                 text || "";
-
 
             return div.innerHTML;
 
         }
 
 
-        // ========================================
-        // START ROOM
-        // ========================================
+        // =====================================================
+        // MULAI
+        // =====================================================
 
         setupRoom();
 

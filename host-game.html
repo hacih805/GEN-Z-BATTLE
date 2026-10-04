@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Host Game - GEN Z BATTLE</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <!-- HEADER -->
+
+        <div class="badge">
+            👑 HOST GAME
+        </div>
+
+        <h1>
+            GEN Z<br>
+            <span>BATTLE</span>
+        </h1>
+
+
+        <!-- ROOM INFO -->
+
+        <div class="room-info">
+
+            <div>
+                <span>🔑 Room</span>
+                <strong id="roomCode">
+                    ------
+                </strong>
+            </div>
+
+            <div>
+                <span>🎯 Kategori</span>
+                <strong id="categoryDisplay">
+                    Random
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- RONDE -->
+
+        <div
+            class="waiting"
+            style="margin-top:20px;"
+        >
+
+            <small>
+                RONDE SEKARANG
+            </small>
+
+            <h2 id="roundDisplay">
+                Ronde 1
+            </h2>
+
+        </div>
+
+
+        <!-- PERTANYAAN -->
+
+        <div
+            class="waiting"
+            style="margin-top:20px;"
+        >
+
+            <small>
+                ❓ PERTANYAAN
+            </small>
+
+            <textarea
+                id="questionInput"
+                placeholder="Tulis pertanyaan di sini..."
+                maxlength="300"
+                style="
+                    width:100%;
+                    min-height:120px;
+                    margin-top:15px;
+                    padding:15px;
+                    box-sizing:border-box;
+                    border-radius:15px;
+                    border:1px solid rgba(255,255,255,0.15);
+                    background:rgba(255,255,255,0.06);
+                    color:white;
+                    font-size:17px;
+                    resize:vertical;
+                    outline:none;
+                    font-family:inherit;
+                "
+            ></textarea>
+
+        </div>
+
+
+        <!-- TOMBOL MULAI RONDE -->
+
+        <button
+            id="startRoundButton"
+            class="create-button"
+            onclick="startRound()"
+            style="margin-top:20px;"
+        >
+            🚀 MULAI RONDE
+        </button>
+
+
+        <!-- STATUS -->
+
+        <div
+            class="waiting"
+            style="margin-top:20px;"
+        >
+
+            <h2 id="statusTitle">
+                ⏳ Menunggu Host
+            </h2>
+
+            <p id="statusText">
+                Tulis pertanyaan lalu tekan
+                "Mulai Ronde".
+            </p>
+
+        </div>
+
+
+        <!-- RESET BELL -->
+
+        <button
+            id="nextRoundButton"
+            class="create-button"
+            onclick="nextRound()"
+            style="
+                margin-top:12px;
+                opacity:0.5;
+            "
+            disabled
+        >
+            ➡️ RONDE BERIKUTNYA
+        </button>
+
+
+        <p class="version">
+            GEN Z BATTLE • HOST CONTROL
+        </p>
+
+    </main>
+
+
+    <!-- SUPABASE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase-config.js"></script>
+
+
+    <script>
+
+        // =====================================================
+        // DATA ROOM
+        // =====================================================
+
+        const roomId =
+            localStorage.getItem(
+                "genz_room_id"
+            );
+
+        const roomCode =
+            localStorage.getItem(
+                "genz_room"
+            );
+
+        const category =
+            localStorage.getItem(
+                "genz_category"
+            );
+
+
+        // =====================================================
+        // ELEMENT
+        // =====================================================
+
+        const roomCodeElement =
+            document.getElementById(
+                "roomCode"
+            );
+
+        const categoryElement =
+            document.getElementById(
+                "categoryDisplay"
+            );
+
+        const roundElement =
+            document.getElementById(
+                "roundDisplay"
+            );
+
+        const questionInput =
+            document.getElementById(
+                "questionInput"
+            );
+
+        const startRoundButton =
+            document.getElementById(
+                "startRoundButton"
+            );
+
+        const nextRoundButton =
+            document.getElementById(
+                "nextRoundButton"
+            );
+
+        const statusTitle =
+            document.getElementById(
+                "statusTitle"
+            );
+
+        const statusText =
+            document.getElementById(
+                "statusText"
+            );
+
+
+        // =====================================================
+        // TAMPILKAN DATA
+        // =====================================================
+
+        roomCodeElement.textContent =
+            roomCode || "------";
+
+
+        const categoryNames = {
+
+            "random":
+                "🎲 Random",
+
+            "general":
+                "📚 Pengetahuan Umum",
+
+            "genz":
+                "🔥 Gen Z",
+
+            "random-question":
+                "🤪 Pertanyaan Random"
+
+        };
+
+
+        categoryElement.textContent =
+            categoryNames[category] ||
+            "🎲 Random";
+
+
+        // =====================================================
+        // STATE
+        // =====================================================
+
+        let currentRound = 1;
+
+        let roundStarted = false;
+
+
+        // =====================================================
+        // CEK ROOM
+        // =====================================================
+
+        if (!roomId) {
+
+            startRoundButton.disabled =
+                true;
+
+            statusTitle.textContent =
+                "❌ Room tidak ditemukan";
+
+            statusText.textContent =
+                "Room ID tidak tersedia.";
+
+        }
+
+
+        // =====================================================
+        // LOAD ROOM
+        // =====================================================
+
+        async function loadRoom() {
+
+            if (!roomId) {
+                return;
+            }
+
+
+            const {
+                data: room,
+                error
+            } = await sb
+                .from("rooms")
+                .select(
+                    "current_question, round_number, status"
+                )
+                .eq(
+                    "id",
+                    roomId
+                )
+                .maybeSingle();
+
+
+            if (error) {
+
+                console.error(
+                    "❌ Gagal mengambil room:",
+                    error
+                );
+
+                return;
+            }
+
+
+            if (!room) {
+                return;
+            }
+
+
+            currentRound =
+                Number(
+                    room.round_number
+                ) || 1;
+
+
+            roundElement.textContent =
+                "Ronde " +
+                currentRound;
+
+
+            if (
+                room.current_question
+            ) {
+
+                questionInput.value =
+                    room.current_question;
+
+                roundStarted = true;
+
+                statusTitle.textContent =
+                    "🔥 Ronde sedang berjalan";
+
+                statusText.textContent =
+                    "Pertanyaan sedang dimainkan.";
+
+                startRoundButton.disabled =
+                    true;
+
+                startRoundButton.style.opacity =
+                    "0.5";
+
+                enableNextRound();
+
+            }
+
+        }
+
+
+        // =====================================================
+        // MULAI RONDE
+        // =====================================================
+
+        async function startRound() {
+
+            if (!roomId) {
+                return;
+            }
+
+
+            const question =
+                questionInput.value.trim();
+
+
+            // ---------------------------------------------
+            // VALIDASI
+            // ---------------------------------------------
+
+            if (
+                question === ""
+            ) {
+
+                alert(
+                    "❓ Silakan masukkan pertanyaan terlebih dahulu."
+                );
+
+                questionInput.focus();
+
+                return;
+            }
+
+
+            // ---------------------------------------------
+            // MATIKAN TOMBOL
+            // ---------------------------------------------
+
+            startRoundButton.disabled =
+                true;
+
+            startRoundButton.style.opacity =
+                "0.5";
+
+
+            try {
+
+                // =========================================
+                // UPDATE ROOM
+                // =========================================
+
+                const {
+                    data,
+                    error
+                } = await sb
+                    .from("rooms")
+                    .update({
+                        current_question:
+                            question,
+
+                        round_number:
+                            currentRound,
+
+                        status:
+                            "playing"
+                    })
+                    .eq(
+                        "id",
+                        roomId
+                    )
+                    .select()
+                    .single();
+
+
+                // =========================================
+                // ERROR
+                // =========================================
+
+                if (error) {
+
+                    console.error(
+                        "❌ Gagal memulai ronde:",
+                        error
+                    );
+
+                    alert(
+                        "❌ Gagal memulai ronde.\n\n" +
+                        error.message
+                    );
+
+                    startRoundButton.disabled =
+                        false;
+
+                    startRoundButton.style.opacity =
+                        "1";
+
+                    return;
+                }
+
+
+                // =========================================
+                // BERHASIL
+                // =========================================
+
+                console.log(
+                    "🚀 Ronde dimulai:",
+                    data
+                );
+
+
+                roundStarted = true;
+
+
+                statusTitle.textContent =
+                    "🔥 RONDE DIMULAI!";
+
+                statusText.textContent =
+                    "Semua Player sudah menerima pertanyaan.";
+
+
+                enableNextRound();
+
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error:",
+                    error
+                );
+
+                alert(
+                    "❌ Terjadi kesalahan.\n\n" +
+                    error.message
+                );
+
+
+                startRoundButton.disabled =
+                    false;
+
+                startRoundButton.style.opacity =
+                    "1";
+
+            }
+
+        }
+
+
+        // =====================================================
+        // AKTIFKAN TOMBOL RONDE BERIKUTNYA
+        // =====================================================
+
+        function enableNextRound() {
+
+            nextRoundButton.disabled =
+                false;
+
+            nextRoundButton.style.opacity =
+                "1";
+
+        }
+
+
+        // =====================================================
+        // RONDE BERIKUTNYA
+        // =====================================================
+
+        async function nextRound() {
+
+            if (!roomId) {
+                return;
+            }
+
+
+            const nextRoundNumber =
+                currentRound + 1;
+
+
+            try {
+
+                // =========================================
+                // RESET BELL
+                // =========================================
+
+                const {
+                    error: deleteError
+                } = await sb
+                    .from("bell_battles")
+                    .delete()
+                    .eq(
+                        "room_id",
+                        roomId
+                    )
+                    .eq(
+                        "round_number",
+                        nextRoundNumber
+                    );
+
+
+                if (deleteError) {
+
+                    console.error(
+                        "⚠️ Reset bell:",
+                        deleteError
+                    );
+
+                }
+
+
+                // =========================================
+                // UPDATE RONDE
+                // =========================================
+
+                const {
+                    error
+                } = await sb
+                    .from("rooms")
+                    .update({
+
+                        current_question:
+                            "",
+
+                        round_number:
+                            nextRoundNumber
+
+                    })
+                    .eq(
+                        "id",
+                        roomId
+                    );
+
+
+                if (error) {
+
+                    console.error(
+                        "❌ Gagal ke ronde berikutnya:",
+                        error
+                    );
+
+                    alert(
+                        "❌ Gagal memulai ronde berikutnya.\n\n" +
+                        error.message
+                    );
+
+                    return;
+                }
+
+
+                // =========================================
+                // UPDATE UI
+                // =========================================
+
+                currentRound =
+                    nextRoundNumber;
+
+                roundStarted =
+                    false;
+
+
+                roundElement.textContent =
+                    "Ronde " +
+                    currentRound;
+
+
+                questionInput.value =
+                    "";
+
+
+                statusTitle.textContent =
+                    "⏳ Siap untuk ronde berikutnya";
+
+                statusText.textContent =
+                    "Masukkan pertanyaan baru.";
+
+
+                startRoundButton.disabled =
+                    false;
+
+                startRoundButton.style.opacity =
+                    "1";
+
+
+                nextRoundButton.disabled =
+                    true;
+
+                nextRoundButton.style.opacity =
+                    "0.5";
+
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error:",
+                    error
+                );
+
+                alert(
+                    "❌ Terjadi kesalahan.\n\n" +
+                    error.message
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // MULAI
+        // =====================================================
+
+        loadRoom();
+
+    </script>
+
+</body>
+
+</html>
