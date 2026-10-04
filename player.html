@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -17,6 +18,10 @@
 
     <main class="container">
 
+        <!-- =========================
+             HEADER
+        ========================== -->
+
         <div class="badge">
             🎮 PLAYER MODE
         </div>
@@ -30,9 +35,15 @@
             Masukkan nama dan kode room untuk bergabung.
         </p>
 
+
+        <!-- =========================
+             FORM JOIN
+        ========================== -->
+
         <div class="menu">
 
             <!-- NAMA PLAYER -->
+
             <input
                 id="playerName"
                 type="text"
@@ -54,7 +65,9 @@
                 "
             >
 
+
             <!-- KODE ROOM -->
+
             <input
                 id="roomCodeInput"
                 type="text"
@@ -76,7 +89,11 @@
                 "
             >
 
+
+            <!-- TOMBOL GABUNG -->
+
             <button
+                id="joinButton"
                 class="main-button player"
                 onclick="joinRoom()"
                 style="margin-top:12px;"
@@ -87,6 +104,7 @@
                 </span>
 
                 <div>
+
                     <strong>
                         GABUNG
                     </strong>
@@ -94,6 +112,7 @@
                     <small>
                         Masuk ke permainan
                     </small>
+
                 </div>
 
                 <span class="arrow">
@@ -104,14 +123,20 @@
 
         </div>
 
+
+        <!-- VERSION -->
+
         <p class="version">
-            GEN Z BATTLE • V0.2
+            GEN Z BATTLE • V0.3
         </p>
 
     </main>
 
 
-    <!-- SUPABASE -->
+    <!-- =========================
+         SUPABASE
+    ========================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script src="supabase-config.js"></script>
@@ -121,23 +146,35 @@
 
     <script>
 
-        // ========================================
+        // =====================================================
+        // ELEMENT
+        // =====================================================
+
+        const playerNameInput =
+            document.getElementById(
+                "playerName"
+            );
+
+        const roomCodeInput =
+            document.getElementById(
+                "roomCodeInput"
+            );
+
+        const joinButton =
+            document.getElementById(
+                "joinButton"
+            );
+
+
+        // =====================================================
         // JOIN ROOM
-        // ========================================
+        // =====================================================
 
         async function joinRoom() {
 
-            const playerNameInput =
-                document.getElementById("playerName");
-
-            const roomCodeInput =
-                document.getElementById("roomCodeInput");
-
-
-            if (!playerNameInput || !roomCodeInput) {
-                return;
-            }
-
+            // -------------------------------------------------
+            // AMBIL INPUT
+            // -------------------------------------------------
 
             const playerName =
                 playerNameInput.value.trim();
@@ -148,7 +185,10 @@
                     .toUpperCase();
 
 
-            // Validasi nama
+            // -------------------------------------------------
+            // VALIDASI NAMA
+            // -------------------------------------------------
+
             if (playerName === "") {
 
                 alert(
@@ -161,7 +201,10 @@
             }
 
 
-            // Validasi kode
+            // -------------------------------------------------
+            // VALIDASI KODE ROOM
+            // -------------------------------------------------
+
             if (roomCode === "") {
 
                 alert(
@@ -174,21 +217,45 @@
             }
 
 
+            // -------------------------------------------------
+            // MATIKAN TOMBOL SEMENTARA
+            // -------------------------------------------------
+
+            joinButton.disabled = true;
+
+            joinButton.style.opacity =
+                "0.6";
+
+
             try {
 
-                // Cari room berdasarkan kode
-                const { data: room, error: roomError } =
-                    await sb
-                        .from("rooms")
-                        .select("*")
-                        .eq("code", roomCode)
-                        .maybeSingle();
+                // =================================================
+                // CARI ROOM
+                // =================================================
+
+                const {
+                    data: room,
+                    error: roomError
+                } = await sb
+                    .from("rooms")
+                    .select("*")
+                    .eq(
+                        "code",
+                        roomCode
+                    )
+                    .maybeSingle();
 
 
-                // Error database
+                // -------------------------------------------------
+                // ERROR DATABASE
+                // -------------------------------------------------
+
                 if (roomError) {
 
-                    console.error(roomError);
+                    console.error(
+                        "❌ Room error:",
+                        roomError
+                    );
 
                     alert(
                         "❌ Gagal mencari room.\n\n" +
@@ -199,7 +266,10 @@
                 }
 
 
-                // Room tidak ditemukan
+                // -------------------------------------------------
+                // ROOM TIDAK DITEMUKAN
+                // -------------------------------------------------
+
                 if (!room) {
 
                     alert(
@@ -211,8 +281,14 @@
                 }
 
 
-                // Cek status room
-                if (room.status !== "waiting") {
+                // =================================================
+                // CEK STATUS ROOM
+                // =================================================
+
+                if (
+                    room.status !==
+                    "waiting"
+                ) {
 
                     alert(
                         "⚠️ Game sudah dimulai atau sudah selesai."
@@ -222,20 +298,31 @@
                 }
 
 
-                // Cek jumlah player
-                const { count, error: countError } =
-                    await sb
-                        .from("players")
-                        .select("*", {
-                            count: "exact",
-                            head: true
-                        })
-                        .eq("room_id", room.id);
+                // =================================================
+                // CEK JUMLAH PLAYER
+                // =================================================
+
+                const {
+                    count,
+                    error: countError
+                } = await sb
+                    .from("players")
+                    .select("*", {
+                        count: "exact",
+                        head: true
+                    })
+                    .eq(
+                        "room_id",
+                        room.id
+                    );
 
 
                 if (countError) {
 
-                    console.error(countError);
+                    console.error(
+                        "❌ Count error:",
+                        countError
+                    );
 
                     alert(
                         "❌ Gagal mengecek jumlah player.\n\n" +
@@ -246,34 +333,60 @@
                 }
 
 
-                if (count >= room.max_players) {
+                // -------------------------------------------------
+                // ROOM PENUH
+                // -------------------------------------------------
+
+                if (
+                    count >=
+                    room.max_players
+                ) {
 
                     alert(
-                        "🚫 Room sudah penuh."
+                        "🚫 Room sudah penuh.\n\n" +
+                        "Kapasitas room: " +
+                        room.max_players +
+                        " pemain."
                     );
 
                     return;
                 }
 
 
-                // Tambahkan player
-                const { data: player, error: playerError } =
-                    await sb
-                        .from("players")
-                        .insert([
-                            {
-                                room_id: room.id,
-                                name: playerName,
-                                score: 0
-                            }
-                        ])
-                        .select()
-                        .single();
+                // =================================================
+                // TAMBAHKAN PLAYER
+                // =================================================
 
+                const {
+                    data: player,
+                    error: playerError
+                } = await sb
+                    .from("players")
+                    .insert([
+                        {
+                            room_id:
+                                room.id,
+
+                            name:
+                                playerName,
+
+                            score: 0
+                        }
+                    ])
+                    .select()
+                    .single();
+
+
+                // -------------------------------------------------
+                // ERROR INSERT PLAYER
+                // -------------------------------------------------
 
                 if (playerError) {
 
-                    console.error(playerError);
+                    console.error(
+                        "❌ Player error:",
+                        playerError
+                    );
 
                     alert(
                         "❌ Gagal bergabung ke room.\n\n" +
@@ -284,7 +397,10 @@
                 }
 
 
-                // Simpan data player di HP
+                // =================================================
+                // SIMPAN DATA PLAYER
+                // =================================================
+
                 localStorage.setItem(
                     "genz_player_id",
                     player.id
@@ -294,6 +410,11 @@
                     "genz_player_name",
                     player.name
                 );
+
+
+                // =================================================
+                // SIMPAN DATA ROOM
+                // =================================================
 
                 localStorage.setItem(
                     "genz_room",
@@ -306,51 +427,131 @@
                 );
 
 
-                // Berhasil
+                // =================================================
+                // ⭐ PENTING
+                // SIMPAN KAPASITAS ROOM
+                // =================================================
+
+                localStorage.setItem(
+                    "genz_players",
+                    room.max_players
+                );
+
+
+                // =================================================
+                // SIMPAN KATEGORI
+                // =================================================
+
+                localStorage.setItem(
+                    "genz_category",
+                    room.category
+                );
+
+
+                // =================================================
+                // SIMPAN NAMA HOST
+                // =================================================
+
+                localStorage.setItem(
+                    "genz_host",
+                    room.host_name
+                );
+
+
+                // =================================================
+                // BERHASIL JOIN
+                // =================================================
+
                 alert(
                     "✅ Berhasil bergabung!\n\n" +
                     "Room: " +
                     room.code +
                     "\nPlayer: " +
-                    player.name
+                    player.name +
+                    "\nKapasitas: " +
+                    room.max_players +
+                    " pemain"
                 );
 
 
-                // Untuk sementara masuk ke room.html
+                // =================================================
+                // MASUK ROOM
+                // =================================================
+
                 window.location.href =
                     "room.html";
 
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "❌ Join error:",
+                    error
+                );
 
                 alert(
                     "❌ Terjadi kesalahan.\n\n" +
                     error.message
                 );
+
+            } finally {
+
+                // -------------------------------------------------
+                // AKTIFKAN KEMBALI TOMBOL
+                // -------------------------------------------------
+
+                joinButton.disabled = false;
+
+                joinButton.style.opacity =
+                    "1";
+
             }
+
         }
 
 
-        // ========================================
+        // =====================================================
         // ENTER = JOIN
-        // ========================================
+        // =====================================================
 
-        document
-            .getElementById("roomCodeInput")
-            .addEventListener(
-                "keydown",
-                function(event) {
+        roomCodeInput.addEventListener(
+            "keydown",
+            function(event) {
 
-                    if (event.key === "Enter") {
-                        joinRoom();
-                    }
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    joinRoom();
 
                 }
-            );
+
+            }
+        );
+
+
+        // =====================================================
+        // OTOMATIS HURUF BESAR
+        // =====================================================
+
+        roomCodeInput.addEventListener(
+            "input",
+            function() {
+
+                this.value =
+                    this.value
+                        .toUpperCase()
+                        .replace(
+                            /[^A-Z0-9]/g,
+                            ""
+                        );
+
+            }
+        );
 
     </script>
 
 </body>
+
 </html>
